@@ -6,27 +6,41 @@ async function nyweatherdata(params) {
      // loading the json data
     const data = await d3.json("nyweather.json");
 
-    data.json(weatherdata).then(data => {
+    //extracting the weather data 
+    const weatherdata = {
+        temperature : data.main.temp,
+        humidity : data.main.humidity,
+        windSpeed : data.main.windSpeed,
+        weatherDescription : data.weather[0].description,
+    }
+    
+    //to be shown in html
+    d3.select("wweatherDescription")
+        .append("h1")
+        // .text(Weather: ${weatherData.weatherDescription});
 
-        weatherdata() = {
-            temperature : data.main.temp,
-            humidity : data.main.humidity,
-            windSpeed : data.main.windSpeed,
-            weatherDescription : data.weather[1].description
-        }
-        
-    }) 
     // Append an SVG dynamically to the body
+    const width = 500;
+    const height = 500;
     const svg = d3.select("body")
         .append("svg")
-        .attr("width", 500)
-        .attr("height", 500);
+        .attr("width", width)
+        .attr("height", height);
+        const marginTop = 20;
+        const marginRight = 0;
+        const marginBottom = 30;
+        const marginLeft = 40;
 
-    svg.append("circle")
-        .attr("cx", 250)   // Center X position
-        .attr("cy", 250)   // Center Y position
-        .attr("r", 100)    // Radius
-        .attr("fill", "blue");  // Fill color
+    //windspeed visual: this is for the x-axis and y-axis
+    const x = d3.scaleBand()
+        .domain(["Temperature", "WindSpeed"])
+        .range([marginLeft, width - marginRight])
+        .padding(0, 1);
+    
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(weatherdata.temperature, weatherdata.windSpeed)]).nice()
+        .range([height - marginBottom, marginTop]);
+    
     
 }
 
