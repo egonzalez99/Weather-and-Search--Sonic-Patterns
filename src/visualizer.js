@@ -41,7 +41,14 @@ async function nyweatherdata(params) {
         .domain([0, d3.max(weatherdata.temperature, weatherdata.windSpeed)]).nice()
         .range([height - marginBottom, marginTop]);
     
-    
+    //bars for temperature and wind speed
+    svg.selectAll("rect")
+        .data[weatherdata.temperature, weatherdata.windSpeed]
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => xScale(["Temperature", "Wind Speed"][i]))//x position
+        .attr("y", d => yScale(d))//y position from data vals
+        
 }
 
 nyweatherdata();
