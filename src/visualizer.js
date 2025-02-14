@@ -49,26 +49,57 @@ async function visualizeWeather() {
         .attr("transform", `translate(${marginLeft},0)`)
         .call(d3.axisLeft(y));
 
-    // Line generator for TAVG
-    const line = d3.line()
+    // Create line generator functions for each variable
+    const lineTAVG = d3.line()//temp
         .x(d => x(d.date))
         .y(d => y(d.TAVG));
 
-    // Append line path
+    const linePRCP = d3.line()//rain
+        .x(d => x(d.date))
+        .y(d => y(d.PRCP));
+
+    const lineAWND = d3.line()//wind
+        .x(d => x(d.date))
+        .y(d => y(d.AWND));
+
+    const lineSNOW = d3.line()//snow
+        .x(d => x(d.date))
+        .y(d => y(d.SNOW));
+
+    // Append line paths for each variable
     svg.append("path")
         .datum(filteredData)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 2)
-        .attr("d", line);
-    
-    data.forEach(d => console.log(d.AWND));
+        .attr("d", lineTAVG);
+
+    svg.append("path")
+        .datum(filteredData)
+        .attr("fill", "none")
+        .attr("stroke", "green")
+        .attr("stroke-width", 2)
+        .attr("d", linePRCP);
+
+    svg.append("path")
+        .datum(filteredData)
+        .attr("fill", "none")
+        .attr("stroke", "red")
+        .attr("stroke-width", 2)
+        .attr("d", lineAWND);
+
+    svg.append("path")
+        .datum(filteredData)
+        .attr("fill", "none")
+        .attr("stroke", "purple")
+        .attr("stroke-width", 2)
+        .attr("d", lineSNOW);
     
     // Return the SVG element.
     return svg.node();
-
     
 }
 
 // Call the function and append the SVG to the document
 visualizeWeather().then(svg => document.body.appendChild(svg));
+
