@@ -1,0 +1,10 @@
+/* Ensure sections stack vertically */
+section {
+    width: 100%;
+    display: block;  /* Forces them into a vertical stack */
+    clear: both;     /* Prevents floating elements from interfering */
+    padding: 20px;
+    content: "";
+    display: table;
+    clear: both;
+}
