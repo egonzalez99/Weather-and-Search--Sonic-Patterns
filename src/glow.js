@@ -11,7 +11,7 @@ async function visualizeWeather() {
         TAVG: d.TAVG
     }));
 
-    const width = 1920, height = 500;
+    const width = 1980, height = 1080;
     const marginTop = 50, marginRight = 50, marginBottom = 50, marginLeft = 50;
 
     // X scale (time)
