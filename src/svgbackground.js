@@ -1,6 +1,6 @@
 export function svgBg() {
-    const width = 1980, height = 1080;
-    const marginTop = 50, marginRight = 50, marginBottom = 50, marginLeft = 50;
+    const width = window.innerWidth, height = window.innerHeight;
+    const marginTop = 0, marginRight = 0, marginBottom = 0, marginLeft = 0;
 
     const svg = d3.select("body")
         .append("svg")

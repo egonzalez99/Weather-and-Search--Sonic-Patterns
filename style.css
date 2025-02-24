@@ -8,3 +8,32 @@ section {
     display: table;
     clear: both;
 }
+
+body {
+    background-image: url('papertexture.jpg');
+    background-size: cover;
+    background-position: center;
+    
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: multiply;
+}
+
+body::before {
+    background-color: #d2b8a9; /* First color */
+    mix-blend-mode: multiply;
+}
+
+body::after {
+    background-color: #8a6f60; /* Second color */
+    mix-blend-mode: overlay; 
+}
