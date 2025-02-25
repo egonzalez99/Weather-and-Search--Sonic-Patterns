@@ -15,13 +15,20 @@ async function searchterm() {
             
             document.getElementById('Output').textContent = `Here is the amount of search results: "${data.searchInformation.totalResults}", for this search term: "${query}"`;
 
+            //the api to be graph on the d3 visual
+            const totalSearchResults = data.searchInformation.totalResults;
+            return totalSearchResults;
         }
+
         else {
             console.log('No search results were found for this search term!');
-        }   
+            return null;
+        }
+
     }
     catch (error) {
         console.error("No data searched", error);
+        return null;
     }
 }
 

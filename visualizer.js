@@ -5,6 +5,9 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 async function visualizeWeather() {
     // Load JSON data
     const data = await d3.json("nysweather.json");
+
+    const searchQuery = 'boots';
+    const totalSearchResults = searchQuery;
     
     // Extract relevant fields
     const filteredData = data.map(d => ({
@@ -13,7 +16,8 @@ async function visualizeWeather() {
         SNOW: d.SNOW,
         PGTM: d.PGTM,
         PRCP: d.PRCP,
-        TAVG: d.TAVG
+        TAVG: d.TAVG,
+        totalSearchResults: d.totalSearchResults
     }));
 
     // Declare the chart dimensions and margins.
