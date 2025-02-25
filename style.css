@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 /* Ensure sections stack vertically */
 section {
     width: 100%;
@@ -9,17 +10,24 @@ section {
     clear: both;
 }
 
+.special-elite-regular {
+    font-family: "Special Elite", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
 body {
     background-image: url('papertexture.jpg');
     background-size: cover;
     background-position: center;
-    
+    font-family: "Special Elite", serif;
+    font-weight: normal;
+    font-style: normal;
 }
 
 body::after {
     content: "";
     position: fixed;
-    
     z-index: -1;
     top: 0;
     left: 0;
@@ -37,3 +45,4 @@ body::after {
     background-color: #8a6f60; /* Second color */
     mix-blend-mode: overlay; 
 }
+
