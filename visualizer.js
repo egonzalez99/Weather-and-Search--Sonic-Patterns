@@ -1,5 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import { fetchSearchTrend } from "./fetchSearchTrend.js";
+import { fetchSearchTrend } from "./searchterm.js";
 
 // Define an async function to load the data and visualize it
 async function visualizeWeather() {
@@ -37,12 +37,12 @@ async function visualizeWeather() {
         .range([height - marginBottom, marginTop]);
     
     //setup the y axis
-    let ySearch;
+    let ySearch; //use tp control the array of data being called from google custom search json api
     if (searchCount !== null) {
         ySearch = d3.scaleLinear()
             .domain([0, searchCount])
             .nice()
-            .range([height - margin.bottom, margin.top]);
+            .range([height - marginBottom, marginTop]);
     }
 
     // Create the SVG container.
@@ -58,9 +58,9 @@ async function visualizeWeather() {
     //add to y axis
     if (searchCount !== null) {
         svg.append("g")
-            .attr("transform", `translate(${width - margin.right},0)`)
+            .attr("transform", `translate(${width - marginRight},0)`)
             .call(d3.axisRight(ySearch))
-            .attr("stroke", "orange");
+            .attr("stroke", "black");//axis color 
     }
 
     // Add the y-axis.
@@ -68,7 +68,7 @@ async function visualizeWeather() {
         .attr("transform", `translate(${marginLeft},0)`)
         .call(d3.axisLeft(y));
 
-    // Create line generator functions for each variable
+    // Create line generator functions for each value
     const lineTAVG = d3.line()//temp
         .x(d => x(d.date))
         .y(d => y(d.TAVG));
@@ -85,7 +85,7 @@ async function visualizeWeather() {
         .x(d => x(d.date))
         .y(d => y(d.SNOW));
     
-    // Append line paths for each variable
+    // Append line paths for each value
     svg.append("path")
         .datum(filteredData)
         .attr("fill", "none")
@@ -117,15 +117,15 @@ async function visualizeWeather() {
     //check if data exist
     if (searchCount !== null) {
         svg.append("circle")
-            .attr("cx", width - margin.right - 20)
+            .attr("cx", width - marginRight - 20)
             .attr("cy", ySearch(searchCount))
             .attr("r", 6)
-            .attr("fill", "orange");
+            .attr("fill", "black");
 
         svg.append("text")
-            .attr("x", width - margin.right - 30)
+            .attr("x", width - marginRight - 30)
             .attr("y", ySearch(searchCount) - 10)
-            .attr("fill", "orange")
+            .attr("fill", "black")
             .attr("font-size", "12px")
             .text(`Search: ${searchCount}`);
     }

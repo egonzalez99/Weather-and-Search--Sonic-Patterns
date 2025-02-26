@@ -2,7 +2,7 @@ const searchKey = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA';
 const engineId = '41332f9237c50459d';
 const query = 'boots' // the search term
 
-export async function searchterm() {
+export async function fetchSearchTrend() {
     const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${searchKey}&cx=${engineId}`;
 
     try {
@@ -19,6 +19,7 @@ export async function searchterm() {
     }
     return null;
 }
+
 
 //<script async src="https://cse.google.com/cse.js?cx=41332f9237c50459d">
 //</script>
