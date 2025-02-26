@@ -1,13 +1,11 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-
+import { fetchSearchTrend } from "./fetchSearchTrend.js";
 
 // Define an async function to load the data and visualize it
 async function visualizeWeather() {
     // Load JSON data
-    const data = await d3.json("nysweather.json");
-
-    const searchQuery = 'boots';
-    const totalSearchResults = searchQuery;
+    const data = await d3.json("nysweather.json");//weather data
+    const searchCount = await fetchSearchTrend();//search data
     
     // Extract relevant fields
     const filteredData = data.map(d => ({
@@ -17,7 +15,7 @@ async function visualizeWeather() {
         PGTM: d.PGTM,
         PRCP: d.PRCP,
         TAVG: d.TAVG,
-        totalSearchResults: d.totalSearchResults
+       
     }));
 
     // Declare the chart dimensions and margins.
@@ -37,6 +35,15 @@ async function visualizeWeather() {
     const y = d3.scaleLinear()
         .domain([0, d3.max(filteredData, d => d.TAVG)]) // Use max TAVG for scale
         .range([height - marginBottom, marginTop]);
+    
+    //setup the y axis
+    let ySearch;
+    if (searchCount !== null) {
+        ySearch = d3.scaleLinear()
+            .domain([0, searchCount])
+            .nice()
+            .range([height - margin.bottom, margin.top]);
+    }
 
     // Create the SVG container.
     const svg = d3.create("svg")
@@ -47,6 +54,14 @@ async function visualizeWeather() {
     svg.append("g")
         .attr("transform", `translate(0,${height - marginBottom})`)
         .call(d3.axisBottom(x).ticks(10));
+
+    //add to y axis
+    if (searchCount !== null) {
+        svg.append("g")
+            .attr("transform", `translate(${width - margin.right},0)`)
+            .call(d3.axisRight(ySearch))
+            .attr("stroke", "orange");
+    }
 
     // Add the y-axis.
     svg.append("g")
@@ -69,7 +84,7 @@ async function visualizeWeather() {
     const lineSNOW = d3.line()//snow
         .x(d => x(d.date))
         .y(d => y(d.SNOW));
-
+    
     // Append line paths for each variable
     svg.append("path")
         .datum(filteredData)
@@ -99,6 +114,22 @@ async function visualizeWeather() {
         .attr("stroke-width", 2)
         .attr("d", lineSNOW);
     
+    //check if data exist
+    if (searchCount !== null) {
+        svg.append("circle")
+            .attr("cx", width - margin.right - 20)
+            .attr("cy", ySearch(searchCount))
+            .attr("r", 6)
+            .attr("fill", "orange");
+
+        svg.append("text")
+            .attr("x", width - margin.right - 30)
+            .attr("y", ySearch(searchCount) - 10)
+            .attr("fill", "orange")
+            .attr("font-size", "12px")
+            .text(`Search: ${searchCount}`);
+    }
+
     // Return the SVG element.
     return svg.node();
     
