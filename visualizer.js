@@ -38,7 +38,6 @@ async function visualizeWeather() {
         .domain(d3.extent(filterData, d => d.date)) // Use data range
         .range([marginLeft, width - marginRight]);
 
-
     const y = d3.scaleLinear()
         .domain([0, d3.max(filterData, d => d.TAVG)]) // Use max TAVG for scale
         .range([height - marginBottom, marginTop]);
