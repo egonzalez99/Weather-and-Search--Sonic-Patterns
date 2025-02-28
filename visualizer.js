@@ -1,22 +1,29 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import { fetchSearchTrend } from "./searchterm.js";
+import { fetchSearchTrends } from "./searchterm.js";
 
 // Define an async function to load the data and visualize it
 async function visualizeWeather() {
-    // Load JSON data
-    const data = await d3.json("nysweather.json");//weather data
-    const searchCount = await fetchSearchTrend();//search data
+    const data = await d3.json("nysweather.json"); // grab Weather data
+    const searchData = await fetchSearchTrends(data); // grab search trend data to match weather data's dates
     
-    // Extract relevant fields
-    const filteredData = data.map(d => ({
-        date: new Date(d.DATE),  // Convert DATE string to Date object
-        AWND: d.AWND,
-        SNOW: d.SNOW,
-        PGTM: d.PGTM,
-        PRCP: d.PRCP,
-        TAVG: d.TAVG,
-       
-    }));
+    if (data.searchInformation) {
+        const totalSearchResults = Number(data.searchInformation.totalResults);
+        console.log(`Total search results for "${query}" on ${date}: ${totalSearchResults}`);
+        results.push({ date: new Date(date), value: totalSearchResults });
+    }
+    
+    // Combine the weather data and search trend data
+    const filterData = data.map(d => {
+        const searchDataForDate = searchData.find(sd => sd.date.toISOString().split('T')[0] === d.DATE); // Match search date to weather date
+        return {
+            date: new Date(d.DATE),
+            TAVG: d.TAVG,
+            PRCP: d.PRCP,
+            AWND: d.AWND,
+            SNOW: d.SNOW,
+            searchTermCount: searchDataForDate ? searchDataForDate.value : 0 // count the search term
+        };
+    });
 
     // Declare the chart dimensions and margins.
     const width = 1000;
@@ -26,24 +33,21 @@ async function visualizeWeather() {
     const marginBottom = 30;
     const marginLeft = 50;
 
-    // Declare the x (horizontal position) scale.
+    // Declare the x and y axis scale weather data
     const x = d3.scaleUtc()
-        .domain(d3.extent(filteredData, d => d.date)) // Use data range
+        .domain(d3.extent(filterData, d => d.date)) // Use data range
         .range([marginLeft, width - marginRight]);
 
-    // Declare the y (vertical position) scale.
+
     const y = d3.scaleLinear()
-        .domain([0, d3.max(filteredData, d => d.TAVG)]) // Use max TAVG for scale
+        .domain([0, d3.max(filterData, d => d.TAVG)]) // Use max TAVG for scale
         .range([height - marginBottom, marginTop]);
-    
-    //setup the y axis
-    let ySearch; //use tp control the array of data being called from google custom search json api
-    if (searchCount !== null) {
-        ySearch = d3.scaleLinear()
-            .domain([0, searchCount])
-            .nice()
-            .range([height - marginBottom, marginTop]);
-    }
+
+    // Declare the y scale for search data.
+    const ySearch = d3.scaleLinear()
+        .domain([0, d3.max(filterData, d => d.searchTermCount)])
+        .nice()
+        .range([height - marginBottom, marginTop]);
 
     // Create the SVG container.
     const svg = d3.create("svg")
@@ -55,80 +59,80 @@ async function visualizeWeather() {
         .attr("transform", `translate(0,${height - marginBottom})`)
         .call(d3.axisBottom(x).ticks(10));
 
-    //add to y axis
-    if (searchCount !== null) {
-        svg.append("g")
-            .attr("transform", `translate(${width - marginRight},0)`)
-            .call(d3.axisRight(ySearch))
-            .attr("stroke", "black");//axis color 
-    }
-
-    // Add the y-axis.
+    // Add the y-axis for weather data.
     svg.append("g")
         .attr("transform", `translate(${marginLeft},0)`)
         .call(d3.axisLeft(y));
 
+    // Add the y-axis for search data (on the right).
+    svg.append("g")
+        .attr("transform", `translate(${width - marginRight},0)`)
+        .call(d3.axisRight(ySearch))
+        .attr("stroke", "black"); // Axis color for search data
+
     // Create line generator functions for each value
-    const lineTAVG = d3.line()//temp
+    const lineTAVG = d3.line() // Temp line
         .x(d => x(d.date))
         .y(d => y(d.TAVG));
 
-    const linePRCP = d3.line()//rain
+    const linePRCP = d3.line() // Rain line
         .x(d => x(d.date))
         .y(d => y(d.PRCP));
 
-    const lineAWND = d3.line()//wind
+    const lineAWND = d3.line() // Wind line
         .x(d => x(d.date))
         .y(d => y(d.AWND));
 
-    const lineSNOW = d3.line()//snow
+    const lineSNOW = d3.line() // Snow line
         .x(d => x(d.date))
         .y(d => y(d.SNOW));
-    
+
     // Append line paths for each value
     svg.append("path")
-        .datum(filteredData)
+        .datum(filterData)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 2)
         .attr("d", lineTAVG);
 
     svg.append("path")
-        .datum(filteredData)
+        .datum(filterData)
         .attr("fill", "none")
         .attr("stroke", "green")
         .attr("stroke-width", 2)
         .attr("d", linePRCP);
 
     svg.append("path")
-        .datum(filteredData)
+        .datum(filterData)
         .attr("fill", "none")
         .attr("stroke", "red")
         .attr("stroke-width", 2)
         .attr("d", lineAWND);
 
     svg.append("path")
-        .datum(filteredData)
+        .datum(filterData)
         .attr("fill", "none")
         .attr("stroke", "purple")
         .attr("stroke-width", 2)
         .attr("d", lineSNOW);
-    
-    //check if data exist
-    if (searchCount !== null) {
-        svg.append("circle")
-            .attr("cx", width - marginRight - 20)
-            .attr("cy", ySearch(searchCount))
-            .attr("r", 6)
-            .attr("fill", "black");
 
-        svg.append("text")
-            .attr("x", width - marginRight - 30)
-            .attr("y", ySearch(searchCount) - 10)
-            .attr("fill", "black")
-            .attr("font-size", "12px")
-            .text(`Search: ${searchCount}`);
-    }
+    // Add circles for search data
+    svg.selectAll(".searchCircle")
+        .data(filterData)
+        .enter().append("circle")
+        .attr("cx", d => x(d.date))
+        .attr("cy", d => ySearch(d.searchTermCount))
+        .attr("r", 1)
+        .attr("fill", "black");
+
+    // Add text on axis for search data number results
+    svg.selectAll(".searchText")
+        .data(filterData)
+        .enter().append("text")
+        .attr("x", d => x(d.date) + 5)
+        .attr("y", d => ySearch(d.searchTermCount))
+        .attr("font-size", "2px")
+        .text(d => d.searchTermCount);
 
     // Return the SVG element.
     return svg.node();

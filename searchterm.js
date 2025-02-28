@@ -2,22 +2,29 @@ const searchKey = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA';
 const engineId = '41332f9237c50459d';
 const query = 'boots' // the search term
 
-export async function fetchSearchTrend() {
-    const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${searchKey}&cx=${engineId}`;
+export async function fetchSearchTrends(weatherData) {
+    const dateRanges = weatherData.map(d => d.DATE);  // Extract dates from weather data
+    const results = [];
 
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
+    for (let date of dateRanges) {
+        const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${searchKey}&cx=${engineId}&dateRestrict=${date}`;  // Use actual weather date
 
-        if (data.searchInformation) {
-            const totalSearchResults = Number(data.searchInformation.totalResults);
-            console.log(`Total search results for "${query}": ${totalSearchResults}`);
-            return totalSearchResults;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.searchInformation) {
+                const totalSearchResults = Number(data.searchInformation.totalResults);
+                console.log(`Total search results for "${query}" on ${date}: ${totalSearchResults}`);
+                results.push({ date: new Date(date), value: totalSearchResults });
+            }
+        } catch (error) {
+            console.error("Search data fetch failed", error);
         }
-    } catch (error) {
-        console.error("Search data fetch failed", error);
+        await delay(1000);
     }
-    return null;
+
+    return results; // Array of { date, value } for plotting
 }
 
 
