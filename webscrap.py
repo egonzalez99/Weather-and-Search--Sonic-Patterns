@@ -1,27 +1,50 @@
 import requests
 import json
+from datetime import datetime, timedelta
 
 # Google Custom Search API Key and Custom Search Engine ID
 api_key = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA'
 cx = '41332f9237c50459d'
 
 # Search query
-query = 'berries'
+query = 'berries'  # Modify the search term if needed
 
-# URL for Custom Search API
-url = f'https://www.googleapis.com/customsearch/v1?q={query}&key={api_key}&cx={cx}'
+# Function to fetch search trends for each month of the past year
+def fetch_search_trends():
+    search_trends = {}
 
-# Send the request and get the response
-response = requests.get(url)
+    for months_ago in range(1, 13):  # Loop from 1 to 12 months ago
+        date_restrict = f'm{months_ago}'  # Restrict search to that month
 
-# Parse the JSON response
-search_results = response.json()
+        url = f'https://www.googleapis.com/customsearch/v1?q={query}&key={api_key}&cx={cx}&dateRestrict={date_restrict}'
 
-# Extract the search items (URLs, titles, snippets)
-items = search_results.get("items", [])
+        try:
+            response = requests.get(url)
 
-# Save the search results to a file
-with open('berries.json', 'w') as json_file:
-    json.dump(items, json_file, indent=4)
+            if response.status_code == 200:
+                data = response.json()
 
-print(items)
+                if 'searchInformation' in data:
+                    total_results = int(data['searchInformation']['totalResults'])
+
+                    # Get the month-year label
+                    target_date = datetime.today() - timedelta(days=30 * months_ago)
+                    month_label = target_date.strftime('%Y-%m')
+
+                    search_trends[month_label] = total_results
+                    print(f'{month_label}: {total_results} results')
+                else:
+                    print(f"No search information for {date_restrict}.")
+            else:
+                print(f"Error {response.status_code} for {date_restrict}.")
+        except Exception as error:
+            print(f"Failed to fetch data for {date_restrict}: {error}")
+
+    # Save the search trends data to a JSON file
+    with open('berries.json', 'w') as json_file:
+        json.dump(search_trends, json_file, indent=4)
+
+    print("Search trends saved to 'search_trends.json'.")
+
+# Call the function to fetch search trends
+fetch_search_trends()
