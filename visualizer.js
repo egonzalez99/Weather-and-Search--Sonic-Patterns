@@ -16,8 +16,8 @@ async function visualizeData() {
     }));
     
     // add berries data
-    const searchDate = d3.timeParse("%Y-%m");
-    berriesData.forEach(d => d.DATE = searchDate(d.DATE));
+    const searchDate = d3.timeParse("%Y-%m"); //needed so the strings can be js objects and match the weather dates
+    berriesData.forEach(d => d.DATE = searchDate(d.DATE)); // adds the parse strng to object into the date 
     
     // Set dimensions
     const width = 1000;
