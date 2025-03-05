@@ -5,7 +5,7 @@ async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("nysweather.json");
     const berriesData = await d3.json("berries.json");
-    const babybirthData = await d3.json("babybirth.json");
+    const yogamats = await d3.json("yogamats.json");
 
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
@@ -21,7 +21,7 @@ async function visualizeData() {
     berriesData.forEach(d => d.DATE = parseDate(d.DATE));
 
     // Parse and process baby birth data
-    babybirthData.forEach(d => d.DATE = parseDate(d.DATE));
+    yogamats.forEach(d => d.DATE = parseDate(d.DATE));
 
     // Set dimensions
     const width = 1000;
@@ -33,7 +33,7 @@ async function visualizeData() {
 
     const yWeather = d3.scaleLinear().range([height - margin.bottom, margin.top]);
     const yBerries = d3.scaleLinear().range([height - margin.bottom, margin.top]);
-    const yBabyBirth = d3.scaleLinear().range([height - margin.bottom, margin.top]);
+    const yYogamats = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 
     // Create SVG
     const svg = d3.select("body").append("svg")
@@ -56,7 +56,7 @@ async function visualizeData() {
         .attr("class", "y-axis-berries");
 
     // Add Y-axis (baby birth data) on the right side
-    const yAxisBabyGroup = svg.append("g")
+    const yAxisYogaGroup = svg.append("g")
         .attr("transform", `translate(${width - margin.right},0)`)
         .attr("class", "y-axis-babybirth");
 
@@ -81,17 +81,17 @@ async function visualizeData() {
         .x(d => x(d.DATE))
         .y(d => yBerries(d.RESULTS));
 
-    const lineBaby = d3.line()
+    const lineYoga = d3.line()
         .x(d => x(d.DATE))
-        .y(d => yBabyBirth(d.RESULTS));
+        .y(d => yYogamats(d.RESULTS));
 
         // Function to hide all paths and axes related to berries and baby birth
     function hideDataSelected() {
         yAxisBerriesGroup.style("display", "none");
-        yAxisBabyGroup.style("display", "none");
+        yAxisYogaGroup.style("display", "none");
 
         berriesPath.style("display", "none");
-        babyPath.style("display", "none");
+        yogaPath.style("display", "none");
     }
 
     // Function to show specific data
@@ -101,8 +101,8 @@ async function visualizeData() {
     }
 
     function showBabyBirth() {
-        yAxisBabyGroup.style("display", "block");
-        babyPath.style("display", "block");
+        yAxisYogaGroup.style("display", "block");
+        yogaPath.style("display", "block");
     }
 
     // Append paths for lines
@@ -111,7 +111,7 @@ async function visualizeData() {
     const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-width", 2);
     const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-width", 2);
     const berriesPath = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 2);
-    const babyPath = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 2);
+    const yogaPath = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 2);
 
 
     // Function to update the graph
@@ -123,7 +123,7 @@ async function visualizeData() {
         // Interrupt any ongoing transitions for the axes before starting a new one
         yAxisWeatherGroup.interrupt().transition().duration(3000).call(d3.axisLeft(yWeather));
         yAxisBerriesGroup.interrupt().transition().duration(3000).call(d3.axisRight(yBerries));
-        yAxisBabyGroup.interrupt().transition().duration(3000).call(d3.axisRight(yBabyBirth));
+        yAxisYogaGroup.interrupt().transition().duration(3000).call(d3.axisRight(yYogamats));
         
     
         if (dataType === "weather") {
@@ -150,13 +150,13 @@ async function visualizeData() {
         } 
         else if (dataType === "babybirth") {
             showBabyBirth();
-            yBabyBirth.domain([0, d3.max(data, d => d.RESULTS)]);
+            yYogamats.domain([0, d3.max(data, d => d.RESULTS)]);
     
             // Transition for Y-axis (baby birth data)
-            yAxisBabyGroup.transition().duration(3000).call(d3.axisRight(yBabyBirth));
+            yAxisYogaGroup.transition().duration(3000).call(d3.axisRight(yYogamats));
     
             // Transition for the baby birth line
-            babyPath.datum(data).transition().duration(3000).attr("d", lineBaby);
+            yogaPath.datum(data).transition().duration(3000).attr("d", lineYoga);
         }
     
         // Update X-axis with transition for all datasets
@@ -171,11 +171,11 @@ async function visualizeData() {
         berriesPath.datum(data).transition().duration(3000).attr("d", lineBerries);
         
         // Update Y-axis (baby birth data) with transition
-        yAxisBabyGroup.transition().duration(3000)
-            .call(d3.axisRight(yBabyBirth));
+        yAxisYogaGroup.transition().duration(3000)
+            .call(d3.axisRight(yYogamats));
         
         // Update Transition for the baby birth line
-        babyPath.datum(data).transition().duration(3000).attr("d", lineBaby);
+        yogaPath.datum(data).transition().duration(3000).attr("d", lineYoga);
     }
 
     // Initial update with weather data
@@ -187,8 +187,8 @@ async function visualizeData() {
         .on("click", () => update(berriesData, "berries"));
 
     d3.select("body").append("button")
-        .text("Switch to Baby Birth Data")
-        .on("click", () => update(babybirthData, "babybirth"));
+        .text("Switch to Yoga Mats Data")
+        .on("click", () => update(yogamats, "babybirth"));
 
     return svg.node();
 }

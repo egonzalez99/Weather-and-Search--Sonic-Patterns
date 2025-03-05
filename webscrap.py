@@ -3,11 +3,11 @@ import json
 from datetime import datetime, timedelta
 
 # Google Custom Search API Key and Custom Search Engine ID
-api_key = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA'
-cx = '41332f9237c50459d'
+api_key = 'api_here'
+cx = 'cx_here'
 
 # Search query
-query = 'baby birth'  # Modify the search term if needed
+query = 'Yoga mats'  # Modify the search term if needed
 
 # Function to fetch search trends for each month of the past year
 def fetch_search_trends():

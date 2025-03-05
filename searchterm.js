@@ -1,5 +1,5 @@
-const searchKey = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA';
-const engineId = '41332f9237c50459d';
+const searchKey = 'search_here';
+const engineId = 'engine_id_here';
 const query = 'boots' // the search term
 
 export async function fetchSearchTrends(weatherData) {
