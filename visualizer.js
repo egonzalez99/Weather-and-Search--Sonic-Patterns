@@ -5,7 +5,7 @@ async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("nysweather.json");
     const berriesData = await d3.json("berries.json");
-    
+
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
@@ -14,62 +14,51 @@ async function visualizeData() {
         PRCP: d.PRCP,
         TAVG: d.TAVG
     }));
-    
-    // add berries data
-    const searchDate = d3.timeParse("%Y-%m"); //needed so the strings can be js objects and match the weather dates
-    berriesData.forEach(d => d.DATE = searchDate(d.DATE)); // adds the parse strng to object into the date 
-    
+
+    // Parse and process berries data
+    const searchDate = d3.timeParse("%Y-%m");
+    berriesData.forEach(d => d.DATE = searchDate(d.DATE));
+
     // Set dimensions
     const width = 1000;
     const height = 500;
-    const marginTop = 50;
-    const marginRight = 50;
-    const marginBottom = 50;
-    const marginLeft = 50;
+    const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
     // Define scales
     const x = d3.scaleTime()
-        .domain([d3.min(filterData, d => d.date), d3.max(filterData, d => d.date)])
-        .range([marginLeft, width - marginRight]);
+        .range([margin.left, width - margin.right]);
 
-    //weather x and y axis data to be graph
     const yWeather = d3.scaleLinear()
-        .domain([0, d3.max(filterData, d => d.TAVG)])
-        .range([height - marginBottom, marginTop]);
-    
-    //search term: berries x and y axis data to be graph
+        .range([height - margin.bottom, margin.top]);
+
     const yBerries = d3.scaleLinear()
-        .domain([0, d3.max(berriesData, d => d.RESULTS)])
-        .range([height - marginBottom, marginTop]);
+        .range([height - margin.bottom, margin.top]);
 
     // Create SVG
     const svg = d3.select("body").append("svg")
         .attr("width", width)
         .attr("height", height);
 
-    // add X-axis on graph
-    svg.append("g")
-        .attr("transform", `translate(0,${height - marginBottom})`)
-        .call(d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat("%Y-%m")))
-        .selectAll("text")
-        .attr("transform", "rotate(-45)")
-        .style("text-anchor", "end");
-    
-    // add y - axis for weather data (left side)
-    svg.append("g")
-        .attr("transform", `translate(${marginLeft},0)`)
-        .call(d3.axisLeft(yWeather));
+    // Add X-axis
+    const xAxisGroup = svg.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .attr("class", "x-axis");
 
-    // add y - axis for berries data (right side)
-    svg.append("g")
-        .attr("transform", `translate(${width - marginRight},0)`)
-        .call(d3.axisRight(yBerries));
-    
-    // line graph for weather temperature
+    // Add Y-axis (weather data)
+    const yAxisWeatherGroup = svg.append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .attr("class", "y-axis-weather");
+
+    // Add Y-axis (berries data)
+    const yAxisBerriesGroup = svg.append("g")
+        .attr("transform", `translate(${width - margin.right},0)`)
+        .attr("class", "y-axis-berries");
+
+    // Line generators
     const lineTAVG = d3.line()
         .x(d => x(d.date))
         .y(d => yWeather(d.TAVG));
-    
+
     // line graph for wind/gust speed
     const lineAWND = d3.line()
     .x(d => x(d.date))
@@ -84,54 +73,107 @@ async function visualizeData() {
     const lineSNOW = d3.line()
     .x(d => x(d.date))
     .y(d => yWeather(d.SNOW));
-     
-    // Line generator for berries data
+
     const lineBerries = d3.line()
         .x(d => x(d.DATE))
         .y(d => yBerries(d.RESULTS));
 
-    // draw weather temperature line
-    svg.append("path")
-        .datum(filterData)
+    // Append paths for lines
+    const tavgPath = svg.append("path")
         .attr("fill", "none")
-        .attr("stroke", " #36648b")
-        .attr("stroke-width", 2)
-        .attr("d", lineTAVG);
+        .attr("stroke", "#36648b")
+        .attr("stroke-width", 2);
 
-    // draw wind/gust line
-    svg.append("path")
-    .datum(filterData)
-    .attr("fill", "none")
-    .attr("stroke", "	#00ab66")
-    .attr("stroke-width", 2)
-    .attr("d", lineAWND);
-
-    // draw rain line
-    svg.append("path")
-    .datum(filterData)
-    .attr("fill", "none")
-    .attr("stroke", " #ceff00")
-    .attr("stroke-width", 2)
-    .attr("d", linePRCP);
-
-    // draw rain line
-    svg.append("path")
-    .datum(filterData)
-    .attr("fill", "none")
-    .attr("stroke", " #e2062c")
-    .attr("stroke-width", 2)
-    .attr("d", lineSNOW);
-    
-    // Draw berries interest line
-    svg.append("path")
-        .datum(berriesData)
+    const berriesPath = svg.append("path")
         .attr("fill", "none")
-        .attr("stroke", " #ed872d")
-        .attr("stroke-width", 2)
-        .attr("d", lineBerries);
+        .attr("stroke", "#ed872d")
+        .attr("stroke-width", 2);
+
+    // Function to update the graph with transitions
+    function update(data, isWeather = true) {
+        x.domain(d3.extent(data, d => isWeather ? d.date : d.DATE));
+
+        if (isWeather) {
+            yWeather.domain([0, d3.max(data, d => d.TAVG)]);
+            svg.select(".y-axis-weather")
+                .transition()
+                .duration(3000)
+                .call(d3.axisLeft(yWeather));
+
+            tavgPath
+                .datum(data)
+                .transition()
+                .duration(3000)
+                .attr("d", lineTAVG);
+            // draw weather temperature line
+            svg.append("path")
+            .datum(filterData)
+            .attr("fill", "none")
+            .attr("stroke", " #36648b")
+            .attr("stroke-width", 2)
+            .attr("d", lineTAVG);
+
+            // draw wind/gust line
+            svg.append("path")
+            .datum(filterData)
+            .attr("fill", "none")
+            .attr("stroke", "	#00ab66")
+            .attr("stroke-width", 2)
+            .attr("d", lineAWND);
+
+            // draw rain line
+            svg.append("path")
+            .datum(filterData)
+            .attr("fill", "none")
+            .attr("stroke", " #ceff00")
+            .attr("stroke-width", 2)
+            .attr("d", linePRCP);
+
+            // draw rain line
+            svg.append("path")
+            .datum(filterData)
+            .attr("fill", "none")
+            .attr("stroke", " #e2062c")
+            .attr("stroke-width", 2)
+            .attr("d", lineSNOW);
+
+        } else {
+            yBerries.domain([0, d3.max(data, d => d.RESULTS)]);
+            svg.select(".y-axis-berries")
+                .transition()
+                .duration(3000)
+                .call(d3.axisRight(yBerries));
+
+            berriesPath
+                .datum(data)
+                .transition()
+                .duration(3000)
+                .attr("d", lineBerries);
+        }
+
+        // Update x-axis
+        svg.select(".x-axis")
+            .transition()
+            .duration(3000)
+            .call(d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat("%Y-%m")));
+    }
+
+    // Initial update with weather data
+    update(filterData, true);
+
+    // Add a button to switch datasets
+    d3.select("body").append("button")
+        .text("Switch to Berries Data")
+        .on("click", function() {
+            update(berriesData, false);
+        });
 
     return svg.node();
 }
 
-// calling the function to do data visualization
+// Calling the function to visualize data
 visualizeData().then(svg => document.body.appendChild(svg));
+
+
+
+
