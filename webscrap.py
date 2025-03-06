@@ -3,11 +3,11 @@ import json
 from datetime import datetime, timedelta
 
 # Google Custom Search API Key and Custom Search Engine ID
-api_key = 'api_here'
-cx = 'cx_here'
+api_key = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA'
+cx = '41332f9237c50459d'
 
 # Search query
-query = 'Yoga mats'  # Modify the search term if needed
+query = 'green tea'  # Modify the search term if needed
 
 # Function to fetch search trends for each month of the past year
 def fetch_search_trends():
@@ -41,7 +41,7 @@ def fetch_search_trends():
             print(f"Failed to fetch data for {date_restrict}: {error}")
 
     # Save the search trends data to a JSON file
-    with open('babybirth.json', 'w') as json_file:
+    with open('greentea.json', 'w') as json_file:
         json.dump(search_trends, json_file, indent=4)
 
     print("Search trends saved to 'search_trends.json'.")
