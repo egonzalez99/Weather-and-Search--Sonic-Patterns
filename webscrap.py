@@ -13,7 +13,7 @@ query = 'green tea'  # Modify the search term if needed
 def fetch_search_trends():
     search_trends = {}
 
-    for months_ago in range(1, 13):  # Loop from 1 to 12 months ago
+    for months_ago in range(1, 61):  # Loop from 1 to 12 months ago
         date_restrict = f'm{months_ago}'  # Restrict search to that month
 
         url = f'https://www.googleapis.com/customsearch/v1?q={query}&key={api_key}&cx={cx}&dateRestrict={date_restrict}'
