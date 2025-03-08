@@ -1,7 +1,26 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import { createIcon } from './icons.js';
 
 // Define an async function to load and visualize data
 async function visualizeData() {
+
+    // Set dimensions
+    const width = window.innerWidth, height = window.innerHeight;
+    const margin = { top: 0, right: 50, bottom: 50, left: 50 };  // Adjust margin for right-side axes
+    
+    // Create SVG
+    const svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("background", "black")
+
+    // Add a group for the graph elements, initially hidden
+    const graphGroup = svg.append("g")
+    .style("opacity", 0); // Hidden initially
+
+    // creating the icon on screen
+    createIcon(svg, width, graphGroup);
+
     // Load both datasets
     const weatherData = await d3.json("nysweather.json");
     const searchData1 = await d3.json("berries.json");
@@ -27,11 +46,6 @@ async function visualizeData() {
     // Parse and process baby birth data
     searchData3.forEach(d => d.DATE = parseDate(d.DATE));
 
-    // Set dimensions
-    const width = 1000;
-    const height = 550;
-    const margin = { top: 0, right: 50, bottom: 50, left: 50 };  // Adjust margin for right-side axes
-
     // Define scales
     const x = d3.scaleTime().range([margin.left, width - margin.right]);
 
@@ -40,35 +54,35 @@ async function visualizeData() {
     const ySearch2 = d3.scaleLinear().range([height - margin.bottom, margin.top]);
     const yDSearch3 = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 
-    // Create SVG
-    const svg = d3.select("body").append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
     // Add X-axis
     const xAxisGroup = svg.append("g")
         .attr("transform", `translate(0,${height - margin.bottom})`)
-        .attr("class", "x-axis");
+        .attr("class", "x-axis")
+        .style("color", "#fff");
 
     // Add Y-axis (weather data) and keep it visible always
     const yAxisWeatherGroup = svg.append("g")
         .attr("transform", `translate(${margin.left},0)`)
-        .attr("class", "y-axis-weather");
+        .attr("class", "y-axis-weather")
+        .style("color", "#fff");
 
     // Add Y-axis (berries data) on the right side
     const yAxisSearch1 = svg.append("g")
         .attr("transform", `translate(${width - margin.right},0)`)
-        .attr("class", "y-axis-search1");
+        .attr("class", "y-axis-search1")
+        .style("color", "#fff");
 
     // Add Y-axis (yoga mats data) on the right side
     const yAxisSearch2 = svg.append("g")
         .attr("transform", `translate(${width - margin.right},0)`)
-        .attr("class", "y-axis-search2");
+        .attr("class", "y-axis-search2")
+        .style("color", "#fff");
 
     // Add Y-axis (yoga mats data) on the right side
     const yAxisSearch3 = svg.append("g")
         .attr("transform", `translate(${width - margin.right},0)`)
-        .attr("class", "y-axis-search3");
+        .attr("class", "y-axis-search3")
+        .style("color", "#fff");
 
     // Line generators
     const lineTAVG = d3.line()
@@ -128,13 +142,41 @@ async function visualizeData() {
     }
 
     // Append paths for lines
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 1);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-width", 1);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-width", 1);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-width", 1);
-    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 1);
-    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
+    // Create graph paths inside graphGroup
+    const tavgPath = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#36648b")
+        .attr("stroke-width", 1);
+
+    const awndPath = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#00ab66")
+        .attr("stroke-width", 1);
+
+    const prcpPath = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#ceff00")
+        .attr("stroke-width", 1);
+
+    const snowPath = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#e2062c")
+        .attr("stroke-width", 1);
+
+    const search1Path = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#ed872d")
+        .attr("stroke-width", 1);
+
+    const search2Path = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#ff69b4")
+        .attr("stroke-width", 1);
+
+    const search3Path = graphGroup.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#40e0d0")
+        .attr("stroke-width", 1);
 
     // Create a tooltip div to show values
     const tooltip = d3.select("body").append("div")
