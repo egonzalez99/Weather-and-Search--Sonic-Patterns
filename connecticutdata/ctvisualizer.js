@@ -1,11 +1,11 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import { createIcon } from './icons.js';
+import { createIcon } from '/src/icons.js';
 
 // Define an async function to load and visualize data
 async function visualizeData() {
 
     // Set dimensions
-    const width = window.innerWidth, height = window.innerHeight;
+    const width = 1000, height = 500;
     const margin = { top: 0, right: 50, bottom: 50, left: 50 };  // Adjust margin for right-side axes
     
     // Create SVG
@@ -20,9 +20,9 @@ async function visualizeData() {
 
     // creating the icon on screen
     createIcon(svg, width, graphGroup);
-
+    
     // Load both datasets
-    const weatherData = await d3.json("nysweather.json");
+    const weatherData = await d3.json("connecticutdata/ctsweather.json");
     const searchData1 = await d3.json("berries.json");
     const searchData2 = await d3.json("yogamats.json");
     const searchData3 = await d3.json("greentea.json");
@@ -31,9 +31,9 @@ async function visualizeData() {
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
         AWND: d.AWND,
-        SNOW: d.SNOW,
+        SNOW: d.SNOW || 0, //if no snow than default to zero
         PRCP: d.PRCP,
-        TAVG: d.TAVG
+        TAVG: d.TAVG !== "" ? d.TAVG : (d.TMAX + d.TMIN) / 2 //theres no tavg in json so we calculate
     }));
 
     // Parse and process berries data
@@ -188,6 +188,63 @@ async function visualizeData() {
     .style("padding", "5px")
     .style("border-radius", "5px")
     .style("pointer-events", "none");
+
+    //legend box for the line graphs
+    const legend = svg.append("g")
+    .attr("transform", "translate(10, 10)");
+    //temp legend
+    legend.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", 50)
+        .attr("y", 468)
+        .attr("fill", "#36648b");
+
+    legend.append("text")
+        .attr("x", 80)
+        .attr("y", 483)
+        .text(": TAVG")
+        .attr("fill", "white");
+    //wind legend
+    legend.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", 200)
+        .attr("y", 468)
+        .attr("fill", "#00ab66")
+
+    legend.append("text")
+        .attr("x", 230)
+        .attr("y", 483)
+        .attr("fill", "white")
+        .text(": WIND");
+    //rain legend
+    legend.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", 350)
+        .attr("y", 468)
+        .attr("fill", "#ceff00")
+
+    legend.append("text")
+        .attr("x", 380)
+        .attr("y", 483)
+        .attr("fill", "white")
+        .text(": RAIN");
+    //snow legend
+    legend.append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", 470)
+        .attr("y", 468)
+        .attr("fill", "#e2062c")
+
+    legend.append("text")
+        .attr("x", 500)
+        .attr("y", 483)
+        .attr("fill", "white")
+        .text(": RAIN");
+
 
     // Add mouse events for each line
     const addHoverEffect = (line, data, yScale, label) => {
