@@ -12,15 +12,8 @@ async function visualizeData() {
     const svg = d3.select("body").append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("background", "black")
-
-    // Add a group for the graph elements, initially hidden
-    const graphGroup = svg.append("g")
-    .style("opacity", 0); // Hidden initially
-
-    // creating the icon on screen
-    createIcon(svg, width, graphGroup);
-
+        .style("background", "black");
+    
     // Load both datasets
     const weatherData = await d3.json("newyorkdata/nysweather.json");
     const searchData1 = await d3.json("berries.json");
@@ -31,9 +24,9 @@ async function visualizeData() {
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
         AWND: d.AWND,
-        SNOW: d.SNOW,
+        SNOW: d.SNOW || 0, //if no snow than default to zero
         PRCP: d.PRCP,
-        TAVG: d.TAVG
+        TAVG: d.TAVG !== "" ? d.TAVG : (d.TMAX + d.TMIN) / 2 //theres no tavg in json so we calculate
     }));
 
     // Parse and process berries data
@@ -143,37 +136,37 @@ async function visualizeData() {
 
     // Append paths for lines
     // Create graph paths inside graphGroup
-    const tavgPath = graphGroup.append("path")
+    const tavgPath = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#36648b")
         .attr("stroke-width", 1);
 
-    const awndPath = graphGroup.append("path")
+    const awndPath = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#00ab66")
         .attr("stroke-width", 1);
 
-    const prcpPath = graphGroup.append("path")
+    const prcpPath = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#ceff00")
         .attr("stroke-width", 1);
 
-    const snowPath = graphGroup.append("path")
+    const snowPath = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#e2062c")
         .attr("stroke-width", 1);
 
-    const search1Path = graphGroup.append("path")
+    const search1Path = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#ed872d")
         .attr("stroke-width", 1);
 
-    const search2Path = graphGroup.append("path")
+    const search2Path = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#ff69b4")
         .attr("stroke-width", 1);
 
-    const search3Path = graphGroup.append("path")
+    const search3Path = svg.append("path")
         .attr("fill", "none")
         .attr("stroke", "#40e0d0")
         .attr("stroke-width", 1);
