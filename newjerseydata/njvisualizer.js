@@ -1,5 +1,4 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import { createIcon } from '/src/icons.js';
 
 // Define an async function to load and visualize data
 async function visualizeData() {

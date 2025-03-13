@@ -1,7 +1,4 @@
-{
-  "category": "All categories",
-  "location": "New York, NY",
-  "data": [
+[
     {"date": "2020-03-08", "results": 83},
     {"date": "2020-03-15", "results": 70},
     {"date": "2020-03-22", "results": 81},
@@ -67,5 +64,4 @@
     {"date": "2021-05-16", "results": 80},
     {"date": "2021-05-23", "results": 85},
     {"date": "2021-05-30", "results": 84}
-  ]
-}
+]
