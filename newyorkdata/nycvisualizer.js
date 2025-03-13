@@ -5,7 +5,7 @@ async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("newyorkdata/nysweather.json");
     const searchData1 = await d3.json("");
-    const searchData2 = await d3.json("");
+    const searchData2 = await d3.json("newyorkdata/yogamats_trends_ny.json");
     const searchData3 = await d3.json("newyorkdata/greentea_trends_ny.json");
 
     // Parse and process weather data
