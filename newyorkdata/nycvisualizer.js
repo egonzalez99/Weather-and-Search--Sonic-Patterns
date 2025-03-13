@@ -4,7 +4,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("newyorkdata/nysweather.json");
-    const searchData1 = await d3.json("");
+    const searchData1 = await d3.json("newyorkdata/berries_trends_ny.json");
     const searchData2 = await d3.json("newyorkdata/yogamats_trends_ny.json");
     const searchData3 = await d3.json("newyorkdata/greentea_trends_ny.json");
 
@@ -60,37 +60,41 @@ async function visualizeData() {
     // Create SVG
     const svg = d3.select("body").append("svg")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .style("background", "black");
 
     // Add X-axis
     const xAxisGroup = svg.append("g")
         .attr("transform", `translate(0,${height - margin.bottom})`)
-        .attr("class", "x-axis");
+        .attr("class", "x-axis")
+        .style("color", "#fff");
 
     // Add Y-axis (weather data)
     const yAxisWeatherGroup = svg.append("g")
         .attr("transform", `translate(${margin.left},0)`)
-        .attr("class", "y-axis-weather");
+        .attr("class", "y-axis-weather")
+        .style("color", "#fff");
 
     // Add Y-axis (berrues data)
     const yAxisSearch1 = svg.append("g")
     .attr("transform", `translate(${width - margin.right},0)`)
-    .attr("class", "y-axis-berries");
+    .attr("class", "y-axis-berries")
+    .style("color", "#fff");
 
     // Add Y-axis (yoga mats data)
     const yAxisSearch2 = svg.append("g")
     .attr("transform", `translate(${width - margin.right},0)`)
-    .attr("class", "y-axis-berries");
+    .attr("class", "y-axis-berries")
+    .style("color", "#fff");
 
     // Add Y-axis (green tea data)
     const yAxisSearch3 = svg.append("g")
         .attr("transform", `translate(${width - margin.right},0)`)
-        .attr("class", "y-axis-berries");
+        .attr("class", "y-axis-berries")
+        .style("color", "#fff");
 
     // Line generators
-    const lineTAVG = d3.line()
-        .x(d => x(d.date))
-        .y(d => yWeather(d.TAVG));
+    const lineTAVG = d3.line().x(d => x(d.date)).y(d => yWeather(d.TAVG));
 
     // line graph for wind/gust speed
     const lineAWND = d3.line().x(d => x(d.date)).y(d => yWeather(d.AWND));
@@ -137,18 +141,18 @@ async function visualizeData() {
 
     // Append paths for lines and Creates graph paths inside graphGroup
     const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 1);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 2);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 2);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 2);
+    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-width", 1);
+    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-width", 1);
+    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-width", 1);
     const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 1);
     const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 1);
+    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
 
     // Function to update the graph with transitions
     function update(data, dataType) {
         hideDataSelected();  // Hide berries and baby birth data first
 
-        x.domain(d3.extent(data, d => isWeather ? d.date : d.DATE));
+        x.domain(d3.extent(data, d => d.DATE || d.date));
 
         // Interrupt any ongoing transitions for the axes before starting a new one
         yAxisWeatherGroup.interrupt().transition().duration(3000).call(d3.axisLeft(yWeather));
@@ -193,7 +197,7 @@ async function visualizeData() {
             ySearch3.domain([0, d3.max(data, d => d.RESULTS)]);
             
             // Transition for Y-axis (baby birth data)
-            svg.select(".y-axis-berries").transition().duration(3000).call(d3.axisRight(ySearch3));
+            yAxisSearch3.transition().duration(3000).call(d3.axisRight(ySearch3));
 
             // Transition for the baby birth line
             search3Path.datum(data).transition().duration(3000).attr("d", lineSearch3);
@@ -203,7 +207,7 @@ async function visualizeData() {
         xAxisGroup.transition().duration(3000).call(d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat("%Y-%m")));    }
 
     // Initial update with weather data
-    update(filterData, true);
+    update(filterData, "weather");
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
@@ -217,7 +221,7 @@ async function visualizeData() {
     // Add a button to switch datasets
     d3.select("body").append("button")
         .text("Switch to Green tea Data")
-        .on("click", function() { update(searchData3, false);});
+        .on("click", function() { update(searchData3, "search3");});
 
     return svg.node();
 }
