@@ -3,7 +3,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 // Define an async function to load and visualize data
 async function visualizeData() {
     // Load both datasets
-    const weatherData = await d3.json("newyorkdata/nysweather.json");
+    const weatherData = await d3.json("newjerseydata/njsweather.json");
     const searchData1 = await d3.json("newjerseydata/berries_trends_nj.json");
     const searchData2 = await d3.json("newjerseydata/yogamats_trends_nj.json");
     const searchData3 = await d3.json("newjerseydata/greentea_trends_nj.json");
@@ -12,9 +12,9 @@ async function visualizeData() {
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
         AWND: d.AWND,
-        SNOW: d.SNOW,
+        SNOW: d.SNOW || 0, //if no snow than default to zero
         PRCP: d.PRCP,
-        TAVG: d.TAVG
+        TAVG: d.TAVG !== "" ? d.TAVG : (d.TMAX + d.TMIN) / 2 //theres no tavg in json so we calculate
     }));
 
     // Parse and process berries data
