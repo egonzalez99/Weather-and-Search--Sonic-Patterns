@@ -1,4 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import * as Tone from "https://cdn.jsdelivr.net/npm/tone@14/+esm";
 
 // Define an async function to load and visualize data
 async function visualizeData() {
@@ -148,6 +149,26 @@ async function visualizeData() {
     const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
     const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
 
+    const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
+    const synth = new Tone.Synth().toDestination();
+
+    function playSound(value) {
+        synth.triggerAttackRelease(100 + value * 10, "8n");
+    }
+
+    function animatePath(path, data, line, yScale) {
+        const length = path.node().getTotalLength();
+        playHead.attr("cx", x(data[0].date || data[0].DATE)).attr("cy", yScale(data[0].TAVG || data[0].RESULTS));
+        path.attr("stroke-dasharray", length + " " + length).attr("stroke-dashoffset", length);
+        path.transition().duration(5000).ease(d3.easeLinear).attr("stroke-dashoffset", 0);
+        data.forEach((d, i) => {
+            setTimeout(() => {
+                playHead.attr("cx", x(d.date || d.DATE)).attr("cy", yScale(d.TAVG || d.RESULTS));
+                playSound(d.TAVG || d.RESULTS);
+            }, (i / data.length) * 5000);
+        });
+    }
+
     // Function to update the graph with transitions
     function update(data, dataType) {
         hideDataSelected();  // Hide berries and baby birth data first
@@ -172,6 +193,9 @@ async function visualizeData() {
             prcpPath.datum(data).transition().duration(3000).attr("d", linePRCP);
             snowPath.datum(data).transition().duration(3000).attr("d", lineSNOW);
 
+            animatePath(tavgPath, data, lineTAVG, yWeather);
+
+
         } else if (dataType === "search1") {
             showBerries();
             ySearch1.domain([0, d3.max(data, d => d.RESULTS)]);
@@ -181,6 +205,7 @@ async function visualizeData() {
     
             // Transition for the berries line
             search1Path.datum(data).transition().duration(3000).attr("d", lineSearch1);
+            animatePath(search1Path, data, lineSearch1, ySearch1);
 
         } else if (dataType === "search2") {
             showYogaMats();
