@@ -156,6 +156,27 @@ async function visualizeData() {
         synth.triggerAttackRelease(100 + value * 10, "8n");
     }
 
+// Listen for Spacebar to trigger animation
+document.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {  // "Space" plays the sound
+        event.preventDefault(); // Prevents page scrolling when space is pressed
+        animatePath(tavgPath, filterData, lineTAVG, yWeather);
+    }
+});
+
+// Reset function
+function resetAnimation() {
+    tavgPath.attr("stroke-dasharray", "none"); // Remove dash effect
+    playHead.attr("cx", x(filterData[0].date)).attr("cy", yWeather(filterData[0].TAVG));
+}
+
+// press "R" key to reset animation
+document.addEventListener("keydown", (event) => {
+    if (event.key.toLowerCase() === "r") {
+        resetAnimation();
+    }
+});
+    
     function animatePath(path, data, line, yScale) {
         const length = path.node().getTotalLength();
         playHead.attr("cx", x(data[0].date || data[0].DATE)).attr("cy", yScale(data[0].TAVG || data[0].RESULTS));
