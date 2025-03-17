@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <audio src="igor.mp3"></audio>
     <link rel="stylesheet" href="style.css">
     <title>Culmination Project</title>
+    <script src="audio.js" defer></script>
 </head>
 
 <body>
@@ -22,8 +22,16 @@
     <section>
         <script type="module" src="./newyorkdata/nycvisualizer.js"></script>
         <script type="module" src="searchterm.js"></script>
+        <script type="module" src="dataSonification.js"></script>
         <div id="Output"></div>
     </section>        
+
+    <audio id="audioElement" src="igor.mp3"></audio>
+    
+    <button id="playButton" data-playing="false" role="switch" aria-checked="false">
+        <span>Play/Pause</span>
+    </button>
+
 </body>
 
 </html>
