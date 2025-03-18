@@ -151,32 +151,44 @@ async function visualizeData() {
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
     const synth = new Tone.Synth().toDestination();
+    synth.volume.value = 0; // starting volume at 0 dB
+
+    // Get the volume slider element
+    const volumeSlider = document.getElementById("volumeSlider");
+    const volumeValueDisplay = document.getElementById("volumeValue");
+
+    // Update the volume when the slider is adjusted by user
+    volumeSlider.addEventListener("input", (event) => {
+        const volume = event.target.value; // value from the slider
+        synth.volume.value = volume; // Set the volume 
+        volumeValueDisplay.textContent = `${volume} Decibel (dB)`; // Display the volume 
+    });
 
     function playSound(value) {
-        synth.triggerAttackRelease(100 + value * 10, "8n");
+        synth.triggerAttackRelease(10 + value * 10, "8n");
     }
 
-// Listen for Spacebar to trigger animation
-document.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {  // "Space" plays the sound
-        event.preventDefault(); // Prevents page scrolling when space is pressed
-        animatePath(tavgPath, filterData, lineTAVG, yWeather);
-    }
-});
+    // Listen for Spacebar to trigger animation
+    document.addEventListener("keydown", (event) => {
+        if (event.code === "Space") {  // "Space" plays the sound
+            event.preventDefault(); // Prevents page scrolling when space is pressed
+            animatePath(tavgPath, filterData, lineTAVG, yWeather);
+        }
+    });
 
-// Reset function
-function resetAnimation() {
-    tavgPath.attr("stroke-dasharray", "none"); // Remove dash effect
-    playHead.attr("cx", x(filterData[0].date)).attr("cy", yWeather(filterData[0].TAVG));
-}
-
-// press "R" key to reset animation
-document.addEventListener("keydown", (event) => {
-    if (event.key.toLowerCase() === "r") {
-        resetAnimation();
+    // Reset function
+    function resetAnimation() {
+        tavgPath.attr("stroke-dasharray", "none"); // Remove dash effect
+        playHead.attr("cx", x(filterData[0].date)).attr("cy", yWeather(filterData[0].TAVG));
     }
-});
-    
+
+    // press "R" key to reset animation
+    document.addEventListener("keydown", (event) => {
+        if (event.key.toLowerCase() === "r") {
+            resetAnimation();
+        }
+    });
+        
     function animatePath(path, data, line, yScale) {
         const length = path.node().getTotalLength();
         playHead.attr("cx", x(data[0].date || data[0].DATE)).attr("cy", yScale(data[0].TAVG || data[0].RESULTS));
@@ -237,6 +249,7 @@ document.addEventListener("keydown", (event) => {
     
             // Transition for the baby birth line
             search2Path.datum(data).transition().duration(3000).attr("d", lineSearch2);
+            animatePath(search2Path, data, lineSearch2, ySearch2);
 
         } else if (dataType === "search3"){
             showGreenTea();
@@ -247,6 +260,7 @@ document.addEventListener("keydown", (event) => {
 
             // Transition for the baby birth line
             search3Path.datum(data).transition().duration(3000).attr("d", lineSearch3);
+            animatePath(search3Path, data, lineSearch3, ySearch3);
         }
 
         // Update X-axis with transition for all datasets
@@ -267,7 +281,7 @@ document.addEventListener("keydown", (event) => {
     // Add a button to switch datasets
     d3.select("body").append("button")
         .text("Switch to Green tea Data")
-        .on("click", function() { update(searchData3, "search3");});
+        .on("click", () => update(searchData3, "search3"));
 
     return svg.node();
 }

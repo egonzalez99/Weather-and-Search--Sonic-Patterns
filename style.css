@@ -46,3 +46,27 @@ body::after {
     mix-blend-mode: overlay; 
 }
 
+h1, h2, h3, h4 {
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    font-size: 30px;
+    display: inline-block, flex; 
+    width: 100%; 
+    padding-left: 10%; /* cutoff of the text */
+    padding-right: 10%; /* cutoff of the text */
+    box-sizing: border-box; 
+}
+
+p {
+    text-align: justify center;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    display: inline-block, flex; 
+    width: 100%; 
+    padding-left: 10%; /* cutoff of the text */
+    padding-right: 10%; /* cutoff of the text */
+    box-sizing: border-box; 
+    
+}
