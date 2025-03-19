@@ -1,72 +1,139 @@
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
-/* Ensure sections stack vertically */
-section {
-    width: 100%;
-    display: block;  /* Forces them into a vertical stack */
-    clear: both;     /* Prevents floating elements from interfering */
-    padding: 20px;
-    content: "";
-    display: table;
-    clear: both;
+@import url('https://fonts.googleapis.com/css2?family=Anton+SC&display=swap');
+
+/* Background animation */
+@keyframes gradientWave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-.special-elite-regular {
-    font-family: "Special Elite", serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
 body {
-    background-image: url('papertexture.jpg');
-    background-size: cover;
-    background-position: center;
-    font-family: "Special Elite", serif;
-    font-weight: normal;
-    font-style: normal;
+    position: relative;
+    margin: 0;
+    overflow: auto;
+    min-height: 100vh;
 }
 
+/* Add blurred animated background */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("colors.jpg");
+    background-size: 200% auto; /* Expand width for movement */
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+    animation: gradientWave 20s ease infinite;
+    filter: blur(150px);
+    will-change: background-position; /* Improves animation performance */
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay color effects */
 body::after {
     content: "";
     position: fixed;
-    z-index: -1;
     top: 0;
     left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #E3CCB2;
+    mix-blend-mode: multiply;
+    z-index: -2;
+}
+
+/* Section stacking */
+section {
     width: 100%;
-    height: 100%;
-    mix-blend-mode: multiply;
+    display: block;
+    padding: 20px;
+    clear: both;
 }
 
-body::before {
-    background-color: #d2b8a9; /* First color */
-    mix-blend-mode: multiply;
-}
-
-body::after {
-    background-color: #8a6f60; /* Second color */
-    mix-blend-mode: overlay; 
-}
-
+/* Header styling */
 h1, h2, h3, h4 {
     text-align: center;
-    top: 50%;
-    left: 50%;
-    font-size: 30px;
-    display: inline-block, flex; 
-    width: 100%; 
-    padding-left: 10%; /* cutoff of the text */
-    padding-right: 10%; /* cutoff of the text */
-    box-sizing: border-box; 
+    font-size: 35px;
+    width: 100%;
+    padding: 0 10%;
+    box-sizing: border-box;
+    color: black;
 }
 
+/* Paragraph styling */
 p {
-    text-align: justify center;
-    top: 50%;
-    left: 50%;
-    font-size: 20px;
-    display: inline-block, flex; 
-    width: 100%; 
-    padding-left: 10%; /* cutoff of the text */
-    padding-right: 10%; /* cutoff of the text */
-    box-sizing: border-box; 
-    
+    text-align: justify;
+    font-size: 25px;
+    width: 100%;
+    padding: 0 10%;
+    box-sizing: border-box;
+    color: whitesmoke;
 }
+
+hr {
+    border: 2px dotted black;
+}
+
+/* Navigation list styles */
+/* Center the navigation */
+header {
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
+}
+
+/* Remove default list styles */
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Keeps items in a row */
+    gap: 30px; /* Adds spacing between items */
+}
+
+/* Navigation list styles */
+header nav ul li {
+    font-size: 1.2em;
+    line-height: 2.3em;
+    height: 2.3em;
+    padding: 0px 5px;
+}
+
+/* Style for the links */
+header nav ul li a {
+    color: white;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+
+/* Navbar styles */
+.navbar a {
+    position: relative;
+    font-size: 20px;
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+    margin-right: 30px;
+}
+
+/* Hover underline effect */
+.navbar a::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: white;
+    transition: width 0.3s ease;
+}
+
+.navbar a:hover::before {
+    width: 100%;
+}
+
