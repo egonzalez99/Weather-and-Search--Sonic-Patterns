@@ -165,7 +165,7 @@ async function visualizeData() {
     });
 
     function playSound(value) {
-        synth.triggerAttackRelease(100 + value * 10, "8n");
+        synth.triggerAttackRelease(10 + value * 10, "8n");
     }
 
     // Listen for Spacebar to trigger animation
