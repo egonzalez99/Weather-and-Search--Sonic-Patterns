@@ -150,46 +150,69 @@ async function visualizeData() {
     const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
-    const synth = new Tone.Synth().toDestination();
-    synth.volume.value = 0; // starting volume at 0 dB
 
+    // Load MP3 files for different datasets
+    const audioFiles = {
+        weather: new Audio("igor[bass].mp3"),  // Replace with actual file paths
+        search1: new Audio("igor[drums].mp3"),
+        search2: new Audio("igor[music].mp3"),
+        search3: new Audio("thankyou_drums.wav")
+    };
+    
+    // Set initial volume
+    Object.values(audioFiles).forEach(audio => audio.volume = 0.5); // Adjust as needed
+    
     // Get the volume slider element
     const volumeSlider = document.getElementById("volumeSlider");
     const volumeValueDisplay = document.getElementById("volumeValue");
-
-    // Update the volume when the slider is adjusted by user
+    
+    // Update the volume when the slider is adjusted
     volumeSlider.addEventListener("input", (event) => {
-        const volume = event.target.value; // value from the slider
-        synth.volume.value = volume; // Set the volume 
-        volumeValueDisplay.textContent = `${volume} Decibel (dB)`; // Display the volume 
+        const volume = event.target.value / 100; // Convert to 0-1 scale
+        Object.values(audioFiles).forEach(audio => audio.volume = volume);
+        volumeValueDisplay.textContent = `${event.target.value} Decibel (dB)`;
     });
-
-    function playSound(value) {
-        synth.triggerAttackRelease(10 + value * 10, "8n");
+    
+    function playSound(value, dataType) {
+        let audio;
+        if (dataType === "weather") {
+            audio = audioFiles.weather;
+        } else if (dataType === "search1") {
+            audio = audioFiles.search1;
+        } else if (dataType === "search2") {
+            audio = audioFiles.search2;
+        } else if (dataType === "search3") {
+            audio = audioFiles.search3;
+        }
+    
+        if (audio) {
+            audio.currentTime = 0; // Reset playback position
+            audio.play();
+        }
     }
-
+    
     // Listen for Spacebar to trigger animation
     document.addEventListener("keydown", (event) => {
-        if (event.code === "Space") {  // "Space" plays the sound
-            event.preventDefault(); // Prevents page scrolling when space is pressed
-            animatePath(tavgPath, filterData, lineTAVG, yWeather);
+        if (event.code === "Space") {
+            event.preventDefault(); // Prevent page scrolling
+            animatePath(tavgPath, filterData, lineTAVG, yWeather, "weather");
         }
     });
-
+    
     // Reset function
     function resetAnimation() {
-        tavgPath.attr("stroke-dasharray", "none"); // Remove dash effect
+        tavgPath.attr("stroke-dasharray", "none");
         playHead.attr("cx", x(filterData[0].date)).attr("cy", yWeather(filterData[0].TAVG));
     }
-
-    // press "R" key to reset animation
+    
+    // Press "R" key to reset animation
     document.addEventListener("keydown", (event) => {
         if (event.key.toLowerCase() === "r") {
             resetAnimation();
         }
     });
-        
-    function animatePath(path, data, line, yScale) {
+    
+    function animatePath(path, data, line, yScale, dataType) {
         const length = path.node().getTotalLength();
         playHead.attr("cx", x(data[0].date || data[0].DATE)).attr("cy", yScale(data[0].TAVG || data[0].RESULTS));
         path.attr("stroke-dasharray", length + " " + length).attr("stroke-dashoffset", length);
@@ -197,7 +220,7 @@ async function visualizeData() {
         data.forEach((d, i) => {
             setTimeout(() => {
                 playHead.attr("cx", x(d.date || d.DATE)).attr("cy", yScale(d.TAVG || d.RESULTS));
-                playSound(d.TAVG || d.RESULTS);
+                playSound(d.TAVG || d.RESULTS, dataType);
             }, (i / data.length) * 5000);
         });
     }
@@ -226,7 +249,7 @@ async function visualizeData() {
             prcpPath.datum(data).transition().duration(3000).attr("d", linePRCP);
             snowPath.datum(data).transition().duration(3000).attr("d", lineSNOW);
 
-            animatePath(tavgPath, data, lineTAVG, yWeather);
+            animatePath(tavgPath, data, lineTAVG, yWeather, "weather");
 
 
         } else if (dataType === "search1") {
@@ -238,7 +261,7 @@ async function visualizeData() {
     
             // Transition for the berries line
             search1Path.datum(data).transition().duration(3000).attr("d", lineSearch1);
-            animatePath(search1Path, data, lineSearch1, ySearch1);
+            animatePath(search1Path, data, lineSearch1, ySearch1, "search1");
 
         } else if (dataType === "search2") {
             showYogaMats();
@@ -249,7 +272,7 @@ async function visualizeData() {
     
             // Transition for the baby birth line
             search2Path.datum(data).transition().duration(3000).attr("d", lineSearch2);
-            animatePath(search2Path, data, lineSearch2, ySearch2);
+            animatePath(search2Path, data, lineSearch2, ySearch2, "search2");
 
         } else if (dataType === "search3"){
             showGreenTea();
@@ -260,7 +283,7 @@ async function visualizeData() {
 
             // Transition for the baby birth line
             search3Path.datum(data).transition().duration(3000).attr("d", lineSearch3);
-            animatePath(search3Path, data, lineSearch3, ySearch3);
+            animatePath(search3Path, data, lineSearch3, ySearch3, "search3");
         }
 
         // Update X-axis with transition for all datasets
