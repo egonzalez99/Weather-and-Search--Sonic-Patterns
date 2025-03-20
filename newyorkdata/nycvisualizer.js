@@ -153,12 +153,12 @@ async function visualizeData() {
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("igor[bass].mp3"),  // Replace with actual file paths
-        search1: new Audio("igor[drums].mp3"),
-        search2: new Audio("igor[music].mp3"),
-        search3: new Audio("thankyou_drums.wav")
+        weather: new Audio("igorstart.wav"),  // Replace with actual file paths
+        search1: new Audio("igorpew.wav"),
+        search2: new Audio("thankyoudrums.wav"),
+        search3: new Audio("thankyouknock.wav")
     };
-    
+
     // Set initial volume
     Object.values(audioFiles).forEach(audio => audio.volume = 0.5); // Adjust as needed
     
@@ -174,21 +174,36 @@ async function visualizeData() {
     });
     
     function playSound(value, dataType) {
-        let audio;
+        let audioList = [];
+    
         if (dataType === "weather") {
-            audio = audioFiles.weather;
-        } else if (dataType === "search1") {
-            audio = audioFiles.search1;
-        } else if (dataType === "search2") {
-            audio = audioFiles.search2;
-        } else if (dataType === "search3") {
-            audio = audioFiles.search3;
+            let weatherAudio = audioFiles.weather; 
+            weatherAudio.volume = Math.min(1, value / 100); // scaling the volume dynamically (from 0 - 1)
+            weatherAudio.playbackRate = Math.max(0.5, Math.min(2, value / 50)); // controls speed (higher temp = faster)
+            audioList.push(audioFiles.weather);
+        } 
+        if (dataType === "search1") {
+            let search1Audio = audioFiles.search1;
+            search1Audio.volume = Math.min(1, value / 100); 
+            search1Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search1);
+        } 
+        if (dataType === "search2") {
+            let search2Audio = audioFiles.search2;
+            search2Audio.volume = Math.min(1, value / 100); 
+            search2Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search2);
+        } 
+        if (dataType === "search3") {
+            let search3Audio = audioFiles.search3;
+            search3Audio.volume = Math.min(1, value / 100); 
+            search3Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search3);
         }
     
-        if (audio) {
-            audio.currentTime = 0; // Reset playback position
+        audioList.forEach(audio => {
             audio.play();
-        }
+        });
     }
     
     // Listen for Spacebar to trigger animation
