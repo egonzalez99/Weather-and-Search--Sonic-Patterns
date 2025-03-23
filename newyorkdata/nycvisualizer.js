@@ -65,34 +65,19 @@ async function visualizeData() {
         .style("background", "black");
 
     // Add X-axis
-    const xAxisGroup = svg.append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .attr("class", "x-axis")
-        .style("color", "#fff");
+    const xAxisGroup = svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`).attr("class", "x-axis").style("color", "#fff");
 
     // Add Y-axis (weather data)
-    const yAxisWeatherGroup = svg.append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        .attr("class", "y-axis-weather")
-        .style("color", "#fff");
+    const yAxisWeatherGroup = svg.append("g").attr("transform", `translate(${margin.left},0)`).attr("class", "y-axis-weather").style("color", "#fff");
 
     // Add Y-axis (berrues data)
-    const yAxisSearch1 = svg.append("g")
-    .attr("transform", `translate(${width - margin.right},0)`)
-    .attr("class", "y-axis-berries")
-    .style("color", "#fff");
+    const yAxisSearch1 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff");
 
     // Add Y-axis (yoga mats data)
-    const yAxisSearch2 = svg.append("g")
-    .attr("transform", `translate(${width - margin.right},0)`)
-    .attr("class", "y-axis-berries")
-    .style("color", "#fff");
+    const yAxisSearch2 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff");
 
     // Add Y-axis (green tea data)
-    const yAxisSearch3 = svg.append("g")
-        .attr("transform", `translate(${width - margin.right},0)`)
-        .attr("class", "y-axis-berries")
-        .style("color", "#fff");
+    const yAxisSearch3 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff");
 
     // Line generators
     const lineTAVG = d3.line().x(d => x(d.date)).y(d => yWeather(d.TAVG));
@@ -148,6 +133,76 @@ async function visualizeData() {
     const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 1);
     const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
     const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
+   
+    // Create a tooltip div to show values
+    const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("visibility", "hidden")
+    .style("background-color", "black")
+    .style("color", "#fff")
+    .style("padding", "5px")
+    .style("border-radius", "5px")
+    .style("pointer-events", "none");
+
+    //legend box for the line graphs
+    const legend = svg.append("g").attr("transform", "translate(10, 10)");
+    
+    //temperature legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 468).attr("fill", "#36648b");
+
+    legend.append("text").attr("x", 150).attr("y", 483).text(": TEMPERATURE").attr("fill", "white");
+
+    //wind legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 360).attr("y", 468).attr("fill", "#00ab66")
+
+    legend.append("text").attr("x", 390).attr("y", 483).attr("fill", "white").text(": WIND");
+    //rain legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 550).attr("y", 468).attr("fill", "#ceff00")
+
+    legend.append("text").attr("x", 580).attr("y", 483).attr("fill", "white").text(": RAIN");
+    //snow legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 468).attr("fill", "#e2062c")
+
+    legend.append("text").attr("x", 750).attr("y", 483).attr("fill", "white").text(": SNOW");
+
+    // Add mouse events for each line
+    const addHoverEffect = (line, data, yScale, label) => {
+    line.on("mouseover", function (event, d) {
+        tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function (event, d) {
+        const mouse = d3.pointer(event);
+        const xPos = mouse[0];
+        const xValue = x.invert(xPos);
+        const bisectDate = d3.bisector(d => d.date || d.DATE).left;
+        const index = bisectDate(data, xValue, 1);
+        const closestData = data[index];
+
+        // Position tooltip and set its text
+        tooltip.style("left", `${xPos + 10}px`)
+            .style("top", `${yScale(closestData[label]) - 30}px`)
+            .html(`
+                Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
+                TAVG: ${closestData.TAVG}<br>
+                AWND: ${closestData.AWND}<br>
+                PRCP: ${closestData.PRCP}<br>
+                SNOW: ${closestData.SNOW}
+            `);
+    })
+    .on("mouseout", function () {
+        tooltip.style("visibility", "hidden");
+    });
+    };
+
+    // Update the lines to add hover effect
+    addHoverEffect(tavgPath, filterData, yWeather, 'TAVG');
+    addHoverEffect(awndPath, filterData, yWeather, 'AWND');
+    addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
+    addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
+    addHoverEffect(search1Path, searchData1, ySearch1, 'RESULTS'); // Update for searchData [1,2,3]
+    addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
+    addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
 
