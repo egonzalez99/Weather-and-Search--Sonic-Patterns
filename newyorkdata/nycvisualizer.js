@@ -18,7 +18,7 @@ async function visualizeData() {
         TAVG: d.TAVG
     }));
 
-    // Parse and process berries data
+    // Parse and process data: needed so the strings can be js objects and match the weather dates
     // Fix date format
     const parseDate = d3.timeParse("%Y-%m-%d");
     searchData1.forEach(d => {
@@ -168,31 +168,32 @@ async function visualizeData() {
 
     // Add mouse events for each line
     const addHoverEffect = (line, data, yScale, label) => {
-    line.on("mouseover", function (event, d) {
-        tooltip.style("visibility", "visible");
-    })
-    .on("mousemove", function (event, d) {
-        const mouse = d3.pointer(event);
-        const xPos = mouse[0];
-        const xValue = x.invert(xPos);
-        const bisectDate = d3.bisector(d => d.date || d.DATE).left;
-        const index = bisectDate(data, xValue, 1);
-        const closestData = data[index];
-
-        // Position tooltip and set its text
-        tooltip.style("left", `${xPos + 10}px`)
-            .style("top", `${yScale(closestData[label]) - 30}px`)
-            .html(`
-                Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
-                TAVG: ${closestData.TAVG}<br>
-                AWND: ${closestData.AWND}<br>
-                PRCP: ${closestData.PRCP}<br>
-                SNOW: ${closestData.SNOW}
-            `);
-    })
-    .on("mouseout", function () {
-        tooltip.style("visibility", "hidden");
-    });
+        line.style("pointer-events", "visibleStroke"); // receive mouse events
+    
+        line.on("mouseover", function (event) {
+            tooltip.style("visibility", "visible");
+        })
+        //fix position by 
+        .on("mousemove", function (event) {
+            const [xPos] = d3.pointer(event); //relative to container line graph 
+            const xValue = x.invert(xPos); //convert pixel data into date data
+            const bisectDate = d3.bisector(d => d.date || d.DATE).left; //show date depending on where the cursor lands in the sprted array
+            const index = bisectDate(data, xValue, 1);
+            const closestData = data[index];
+    
+            tooltip.style("left", `${event.pageX + 10}px`)
+                .style("top", `${event.pageY - 30}px`)
+                .html(`
+                    Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
+                    TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
+                    WIND: ${closestData.AWND ?? "N/A"}<br>
+                    RAIN: ${closestData.PRCP ?? "N/A"}<br>
+                    SNOW: ${closestData.SNOW ?? "N/A"}
+                `);
+        })
+        .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+        });
     };
 
     // Update the lines to add hover effect

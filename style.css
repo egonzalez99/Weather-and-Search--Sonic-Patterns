@@ -137,3 +137,14 @@ header nav ul li a {
     width: 100%;
 }
 
+/* Hover Mouse effect */
+.tooltip {
+  position: absolute;
+  z-index: 20;
+  background: black;
+  color: white;
+  padding: 2px;
+  border-radius: 4px;
+  font-size: 16px;
+  pointer-events: none;
+}
