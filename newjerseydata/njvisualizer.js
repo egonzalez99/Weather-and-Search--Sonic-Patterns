@@ -149,16 +149,87 @@ async function visualizeData() {
     const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
     const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
 
+    // Create a tooltip div to show values
+    const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("visibility", "hidden")
+    .style("background-color", "black")
+    .style("color", "#fff")
+    .style("padding", "5px")
+    .style("border-radius", "5px")
+    .style("pointer-events", "none");
+
+    //legend box for the line graphs
+    const legend = svg.append("g").attr("transform", "translate(10, 10)");
+    
+    //temperature legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 468).attr("fill", "#36648b");
+
+    legend.append("text").attr("x", 150).attr("y", 483).text(": TEMPERATURE").attr("fill", "white");
+
+    //wind legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 360).attr("y", 468).attr("fill", "#00ab66")
+
+    legend.append("text").attr("x", 390).attr("y", 483).attr("fill", "white").text(": WIND");
+    //rain legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 550).attr("y", 468).attr("fill", "#ceff00")
+
+    legend.append("text").attr("x", 580).attr("y", 483).attr("fill", "white").text(": RAIN");
+    //snow legend
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 468).attr("fill", "#e2062c")
+
+    legend.append("text").attr("x", 750).attr("y", 483).attr("fill", "white").text(": SNOW");
+
+    // Add mouse events for each line
+    const addHoverEffect = (line, data, yScale, label) => {
+        line.style("pointer-events", "visibleStroke"); // receive mouse events
+    
+        line.on("mouseover", function (event) {
+            tooltip.style("visibility", "visible");
+        })
+        //fix position by 
+        .on("mousemove", function (event) {
+            const [xPos] = d3.pointer(event); //relative to container line graph 
+            const xValue = x.invert(xPos); //convert pixel data into date data
+            const bisectDate = d3.bisector(d => d.date || d.DATE).left; //show date depending on where the cursor lands in the sprted array
+            const index = bisectDate(data, xValue, 1);
+            const closestData = data[index];
+    
+            tooltip.style("left", `${event.pageX + 10}px`)
+                .style("top", `${event.pageY - 30}px`)
+                .html(`
+                    Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
+                    TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
+                    WIND: ${closestData.AWND ?? "N/A"}<br>
+                    RAIN: ${closestData.PRCP ?? "N/A"}<br>
+                    SNOW: ${closestData.SNOW ?? "N/A"}
+                `);
+        })
+        .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+        });
+    };
+
+    // Update the lines to add hover effect
+    addHoverEffect(tavgPath, filterData, yWeather, 'TAVG');
+    addHoverEffect(awndPath, filterData, yWeather, 'AWND');
+    addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
+    addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
+    addHoverEffect(search1Path, searchData1, ySearch1, 'RESULTS'); // Update for searchData [1,2,3]
+    addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
+    addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
+
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("igor[bass].mp3"),  // Replace with actual file paths
-        search1: new Audio("igor[drums].mp3"),
-        search2: new Audio("igor[music].mp3"),
-        search3: new Audio("thankyou_drums.wav")
+        weather: new Audio(""),  // Replace with actual file paths
+        search1: new Audio("contactdrums.wav"),
+        search2: new Audio("mgmtkidsintro.wav"),
+        search3: new Audio("stonedguitar.wav")
     };
-    
+
     // Set initial volume
     Object.values(audioFiles).forEach(audio => audio.volume = 0.5); // Adjust as needed
     
@@ -174,21 +245,36 @@ async function visualizeData() {
     });
     
     function playSound(value, dataType) {
-        let audio;
+        let audioList = [];
+    
         if (dataType === "weather") {
-            audio = audioFiles.weather;
-        } else if (dataType === "search1") {
-            audio = audioFiles.search1;
-        } else if (dataType === "search2") {
-            audio = audioFiles.search2;
-        } else if (dataType === "search3") {
-            audio = audioFiles.search3;
+            let weatherAudio = audioFiles.weather; 
+            weatherAudio.volume = Math.min(1, value / 100); // scaling the volume dynamically (from 0 - 1)
+            weatherAudio.playbackRate = Math.max(0.5, Math.min(2, value / 50)); // controls speed (higher temp = faster)
+            audioList.push(audioFiles.weather);
+        } 
+        if (dataType === "search1") {
+            let search1Audio = audioFiles.search1;
+            search1Audio.volume = Math.min(1, value / 100); 
+            search1Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search1);
+        } 
+        if (dataType === "search2") {
+            let search2Audio = audioFiles.search2;
+            search2Audio.volume = Math.min(1, value / 100); 
+            search2Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search2);
+        } 
+        if (dataType === "search3") {
+            let search3Audio = audioFiles.search3;
+            search3Audio.volume = Math.min(1, value / 100); 
+            search3Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search3);
         }
     
-        if (audio) {
-            audio.currentTime = 0; // Reset playback position
+        audioList.forEach(audio => {
             audio.play();
-        }
+        });
     }
     
     // Listen for Spacebar to trigger animation
