@@ -5,9 +5,9 @@ import * as Tone from "https://cdn.jsdelivr.net/npm/tone@14/+esm";
 async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("newjerseydata/njsweather.json");
-    const searchData1 = await d3.json("newjerseydata/berries_trends_nj.json");
-    const searchData2 = await d3.json("newjerseydata/yogamats_trends_nj.json");
-    const searchData3 = await d3.json("newjerseydata/greentea_trends_nj.json");
+    const searchData1 = await d3.json("newjerseydata/pedialytenj.json");
+    const searchData2 = await d3.json("newjerseydata/automotivebatterynj.json");
+    const searchData3 = await d3.json("newjerseydata/lampsnj.json");
 
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
@@ -65,34 +65,19 @@ async function visualizeData() {
         .style("background", "black");
 
     // Add X-axis
-    const xAxisGroup = svg.append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .attr("class", "x-axis")
-        .style("color", "#fff");
+    const xAxisGroup = svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`).attr("class", "x-axis").style("color", "#fff").style("font-size", "16px");
 
     // Add Y-axis (weather data)
-    const yAxisWeatherGroup = svg.append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        .attr("class", "y-axis-weather")
-        .style("color", "#fff");
+    const yAxisWeatherGroup = svg.append("g").attr("transform", `translate(${margin.left},0)`).attr("class", "y-axis-weather").style("color", "#fff").style("font-size", "16px");
 
-    // Add Y-axis (berrues data)
-    const yAxisSearch1 = svg.append("g")
-    .attr("transform", `translate(${width - margin.right},0)`)
-    .attr("class", "y-axis-berries")
-    .style("color", "#fff");
+    // Add Y-axis (Pedialyte data)
+    const yAxisSearch1 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
-    // Add Y-axis (yoga mats data)
-    const yAxisSearch2 = svg.append("g")
-    .attr("transform", `translate(${width - margin.right},0)`)
-    .attr("class", "y-axis-berries")
-    .style("color", "#fff");
+    // Add Y-axis (Automotive Battery data)
+    const yAxisSearch2 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
-    // Add Y-axis (green tea data)
-    const yAxisSearch3 = svg.append("g")
-        .attr("transform", `translate(${width - margin.right},0)`)
-        .attr("class", "y-axis-berries")
-        .style("color", "#fff");
+    // Add Y-axis (lamps data)
+    const yAxisSearch3 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
     // Line generators
     const lineTAVG = d3.line().x(d => x(d.date)).y(d => yWeather(d.TAVG));
@@ -164,22 +149,22 @@ async function visualizeData() {
     const legend = svg.append("g").attr("transform", "translate(10, 10)");
     
     //temperature legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 468).attr("fill", "#36648b");
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 0).attr("fill", "#36648b");
 
-    legend.append("text").attr("x", 150).attr("y", 483).text(": TEMPERATURE").attr("fill", "white");
+    legend.append("text").attr("x", 150).attr("y", 16).text(": TEMPERATURE").attr("fill", "white");
 
     //wind legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 360).attr("y", 468).attr("fill", "#00ab66")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 360).attr("y", 0).attr("fill", "#00ab66")
 
-    legend.append("text").attr("x", 390).attr("y", 483).attr("fill", "white").text(": WIND");
+    legend.append("text").attr("x", 390).attr("y", 16).attr("fill", "white").text(": WIND");
     //rain legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 550).attr("y", 468).attr("fill", "#ceff00")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 550).attr("y", 0).attr("fill", "#ceff00")
 
-    legend.append("text").attr("x", 580).attr("y", 483).attr("fill", "white").text(": RAIN");
+    legend.append("text").attr("x", 580).attr("y", 16).attr("fill", "white").text(": RAIN");
     //snow legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 468).attr("fill", "#e2062c")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 0).attr("fill", "#e2062c")
 
-    legend.append("text").attr("x", 750).attr("y", 483).attr("fill", "white").text(": SNOW");
+    legend.append("text").attr("x", 750).attr("y", 16).attr("fill", "white").text(": SNOW");
 
     // Add mouse events for each line
     const addHoverEffect = (line, data, yScale, label) => {
@@ -382,21 +367,21 @@ async function visualizeData() {
         }
 
         // Update X-axis with transition for all datasets
-        xAxisGroup.transition().duration(3000).call(d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat("%Y-%m")));    }
+        xAxisGroup.transition().duration(3000).call(d3.axisBottom(x).ticks(20).tickFormat(d3.timeFormat("%Y-%m")));    }
 
     // Initial update with weather data
     update(filterData, "weather");
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
-        .text("Switch to Berries Data")
+        .text("Switch to Pedialyte Data")
         .on("click", () => update(searchData1, "search1"))
         .style("background", "#ed872d")
         .style("color", "white")
         .style("font-size", "20px");
 
     d3.select("body").append("button")
-        .text("Switch to Yoga Mats Data")
+        .text("Switch to Automotive Battery Data")
         .on("click", () => update(searchData2, "search2"))
         .style("background", "#ff69b4")
         .style("color", "white")
@@ -404,7 +389,7 @@ async function visualizeData() {
 
     // Add a button to switch datasets
     d3.select("body").append("button")
-        .text("Switch to Green tea Data")
+        .text("Switch to Lamps Data")
         .on("click", () => update(searchData3, "search3"))
         .style("background", "#40e0d0")
         .style("color", "black")

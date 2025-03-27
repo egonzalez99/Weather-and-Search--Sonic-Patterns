@@ -5,9 +5,9 @@ import * as Tone from "https://cdn.jsdelivr.net/npm/tone@14/+esm";
 async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("newyorkdata/nysweather.json");
-    const searchData1 = await d3.json("newyorkdata/berries_trends_ny.json");
-    const searchData2 = await d3.json("newyorkdata/suntan.json");
-    const searchData3 = await d3.json("newyorkdata/greentea_trends_ny.json");
+    const searchData1 = await d3.json("newyorkdata/pedialyteny.json");
+    const searchData2 = await d3.json("newyorkdata/automotivebatteryny.json");
+    const searchData3 = await d3.json("newyorkdata/lampsny.json");
 
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
@@ -71,13 +71,13 @@ async function visualizeData() {
     // Add Y-axis (weather data)
     const yAxisWeatherGroup = svg.append("g").attr("transform", `translate(${margin.left},0)`).attr("class", "y-axis-weather").style("color", "#fff").style("font-size", "16px");
 
-    // Add Y-axis (berrues data)
+    // Add Y-axis (Pedialyte data)
     const yAxisSearch1 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
-    // Add Y-axis (yoga mats data)
+    // Add Y-axis (Automotive Battery data)
     const yAxisSearch2 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
-    // Add Y-axis (green tea data)
+    // Add Y-axis (lamps data)
     const yAxisSearch3 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
     // Line generators
@@ -320,7 +320,6 @@ async function visualizeData() {
             }, (i / data.length) * 5000);
         });
 
-        
     }
 
     // Function to update the graph with transitions
@@ -392,14 +391,14 @@ async function visualizeData() {
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
-        .text("Switch to Berries Data")
+        .text("Switch to Pedialyte Data")
         .on("click", () => update(searchData1, "search1"))
         .style("background", "#ed872d")
         .style("color", "white")
         .style("font-size", "20px");
 
     d3.select("body").append("button")
-        .text("Switch to Sun Tan Data")
+        .text("Switch to Automotive Battery Data")
         .on("click", () => update(searchData2, "search2"))
         .style("background", "#ff69b4")
         .style("color", "white")
@@ -407,7 +406,7 @@ async function visualizeData() {
 
     // Add a button to switch datasets
     d3.select("body").append("button")
-        .text("Switch to Green tea Data")
+        .text("Switch to Lamps Data")
         .on("click", () => update(searchData3, "search3"))
         .style("background", "#40e0d0")
         .style("color", "black")
