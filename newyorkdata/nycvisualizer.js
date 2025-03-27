@@ -214,9 +214,6 @@ async function visualizeData() {
         search2: new Audio("thankyoudrums.wav"),
         search3: new Audio("thankyouknock.wav")
     };
-
-    // Set initial volume
-    Object.values(audioFiles).forEach(audio => audio.volume = 0.5); // Adjust as needed
     
     // Get the volume slider element
     const volumeSlider = document.getElementById("volumeSlider");
@@ -224,9 +221,21 @@ async function visualizeData() {
     
     // Update the volume when the slider is adjusted
     volumeSlider.addEventListener("input", (event) => {
-        const volume = event.target.value / 100; // Convert to 0-1 scale
+        // Get the current slider value
+        const sliderValue = event.target.value;
+
+        // Convert the slider value (-30 dB to 30 dB) to a linear volume value (0 to 1)
+        // 10 ^ (dB / 20) converts dB to a linear scale (0 to 1)
+        let volume = Math.pow(10, sliderValue / 20);
+    
+        // Ensure volume stays within the valid range [0, 1]
+        volume = Math.max(0, Math.min(1, volume));
+    
+        // Update the volume of each audio element
         Object.values(audioFiles).forEach(audio => audio.volume = volume);
-        volumeValueDisplay.textContent = `${event.target.value} Decibel (dB)`;
+    
+        // Display the current dB value next to the slider
+        volumeValueDisplay.textContent = `${sliderValue} dB`;
     });
     
     function playSound(value, dataType) {
