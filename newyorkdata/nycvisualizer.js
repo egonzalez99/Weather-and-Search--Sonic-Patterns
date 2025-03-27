@@ -6,7 +6,7 @@ async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("newyorkdata/nysweather.json");
     const searchData1 = await d3.json("newyorkdata/berries_trends_ny.json");
-    const searchData2 = await d3.json("newyorkdata/yogamats_trends_ny.json");
+    const searchData2 = await d3.json("newyorkdata/suntan.json");
     const searchData3 = await d3.json("newyorkdata/greentea_trends_ny.json");
 
     // Parse and process weather data
@@ -15,7 +15,8 @@ async function visualizeData() {
         AWND: d.AWND,
         SNOW: d.SNOW,
         PRCP: d.PRCP,
-        TAVG: d.TAVG
+        TAVG: d.TAVG,
+        RESULTS: d.RESULTS
     }));
 
     // Parse and process data: needed so the strings can be js objects and match the weather dates
@@ -46,10 +47,10 @@ async function visualizeData() {
     });
 
     // Set dimensions
-    const width = 1000;
-    const height = 500;
+    const width = window.innerWidth;
+    const height = 800;
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
-
+    
     // Define scales
     const x = d3.scaleTime().range([margin.left, width - margin.right]);
 
@@ -65,19 +66,19 @@ async function visualizeData() {
         .style("background", "black");
 
     // Add X-axis
-    const xAxisGroup = svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`).attr("class", "x-axis").style("color", "#fff");
+    const xAxisGroup = svg.append("g").attr("transform", `translate(0,${height - margin.bottom})`).attr("class", "x-axis").style("color", "#fff").style("font-size", "16px");
 
     // Add Y-axis (weather data)
-    const yAxisWeatherGroup = svg.append("g").attr("transform", `translate(${margin.left},0)`).attr("class", "y-axis-weather").style("color", "#fff");
+    const yAxisWeatherGroup = svg.append("g").attr("transform", `translate(${margin.left},0)`).attr("class", "y-axis-weather").style("color", "#fff").style("font-size", "16px");
 
     // Add Y-axis (berrues data)
-    const yAxisSearch1 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff");
+    const yAxisSearch1 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
     // Add Y-axis (yoga mats data)
-    const yAxisSearch2 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff");
+    const yAxisSearch2 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
     // Add Y-axis (green tea data)
-    const yAxisSearch3 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff");
+    const yAxisSearch3 = svg.append("g").attr("transform", `translate(${width - margin.right},0)`).attr("class", "y-axis-berries").style("color", "#fff").style("font-size", "16px");
 
     // Line generators
     const lineTAVG = d3.line().x(d => x(d.date)).y(d => yWeather(d.TAVG));
@@ -125,14 +126,29 @@ async function visualizeData() {
         search3Path.style("display", "block");
     }
 
+    // Define a linear gradient
+    const gradient = svg.append("defs")
+    .append("linearGradient")
+    .attr("id", "gradientStroke")
+    .attr("x1", "0%")
+    .attr("y1", "0%")
+    .attr("x2", "100%")
+    .attr("y2", "0%")
+    .append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", "#36648b")
+    .append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", "#a9a9a9");  // Lighter color
+
     // Append paths for lines and Creates graph paths inside graphGroup
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 1);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-width", 1);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-width", 1);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-width", 1);
-    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 1);
-    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
+    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
    
     // Create a tooltip div to show values
     const tooltip = d3.select("body").append("div")
@@ -149,22 +165,22 @@ async function visualizeData() {
     const legend = svg.append("g").attr("transform", "translate(10, 10)");
     
     //temperature legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 468).attr("fill", "#36648b");
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 0).attr("fill", "#36648b");
 
-    legend.append("text").attr("x", 150).attr("y", 483).text(": TEMPERATURE").attr("fill", "white");
+    legend.append("text").attr("x", 150).attr("y", 16).text(": TEMPERATURE").attr("fill", "white");
 
     //wind legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 360).attr("y", 468).attr("fill", "#00ab66")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 360).attr("y", 0).attr("fill", "#00ab66")
 
-    legend.append("text").attr("x", 390).attr("y", 483).attr("fill", "white").text(": WIND");
+    legend.append("text").attr("x", 390).attr("y", 16).attr("fill", "white").text(": WIND");
     //rain legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 550).attr("y", 468).attr("fill", "#ceff00")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 550).attr("y", 0).attr("fill", "#ceff00")
 
-    legend.append("text").attr("x", 580).attr("y", 483).attr("fill", "white").text(": RAIN");
+    legend.append("text").attr("x", 580).attr("y", 16).attr("fill", "white").text(": RAIN");
     //snow legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 468).attr("fill", "#e2062c")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 0).attr("fill", "#e2062c")
 
-    legend.append("text").attr("x", 750).attr("y", 483).attr("fill", "white").text(": SNOW");
+    legend.append("text").attr("x", 750).attr("y", 16).attr("fill", "white").text(": SNOW");
 
     // Add mouse events for each line
     const addHoverEffect = (line, data, yScale, label) => {
@@ -188,7 +204,7 @@ async function visualizeData() {
                     TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
                     WIND: ${closestData.AWND ?? "N/A"}<br>
                     RAIN: ${closestData.PRCP ?? "N/A"}<br>
-                    SNOW: ${closestData.SNOW ?? "N/A"}
+                    SNOW: ${closestData.SNOW ?? "N/A"}<br>
                 `);
         })
         .on("mouseout", function () {
@@ -209,7 +225,7 @@ async function visualizeData() {
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("igorstart.wav"),  // Replace with actual file paths
+        weather: new Audio("igorstartshort.wav"),  // Replace with actual file paths
         search1: new Audio("igorpew.wav"),
         search2: new Audio("thankyoudrums.wav"),
         search3: new Audio("thankyouknock.wav")
@@ -303,6 +319,8 @@ async function visualizeData() {
                 playSound(d.TAVG || d.RESULTS, dataType);
             }, (i / data.length) * 5000);
         });
+
+        
     }
 
     // Function to update the graph with transitions
@@ -367,24 +385,33 @@ async function visualizeData() {
         }
 
         // Update X-axis with transition for all datasets
-        xAxisGroup.transition().duration(3000).call(d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat("%Y-%m")));    }
+        xAxisGroup.transition().duration(3000).call(d3.axisBottom(x).ticks(20).tickFormat(d3.timeFormat("%Y-%m")));    }
 
     // Initial update with weather data
     update(filterData, "weather");
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
-    .text("Switch to Berries Data")
-    .on("click", () => update(searchData1, "search1"));
+        .text("Switch to Berries Data")
+        .on("click", () => update(searchData1, "search1"))
+        .style("background", "#ed872d")
+        .style("color", "white")
+        .style("font-size", "20px");
 
     d3.select("body").append("button")
-        .text("Switch to Yoga Mats Data")
-        .on("click", () => update(searchData2, "search2"));
+        .text("Switch to Sun Tan Data")
+        .on("click", () => update(searchData2, "search2"))
+        .style("background", "#ff69b4")
+        .style("color", "white")
+        .style("font-size", "20px");
 
     // Add a button to switch datasets
     d3.select("body").append("button")
         .text("Switch to Green tea Data")
-        .on("click", () => update(searchData3, "search3"));
+        .on("click", () => update(searchData3, "search3"))
+        .style("background", "#40e0d0")
+        .style("color", "black")
+        .style("font-size", "20px");
 
     return svg.node();
 }

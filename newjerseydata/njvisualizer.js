@@ -46,8 +46,8 @@ async function visualizeData() {
     });
 
     // Set dimensions
-    const width = 1000;
-    const height = 500;
+    const width = window.innerWidth;
+    const height = 800;
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
     // Define scales
@@ -141,13 +141,13 @@ async function visualizeData() {
     }
 
     // Append paths for lines and Creates graph paths inside graphGroup
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-width", 1);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-width", 1);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-width", 1);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-width", 1);
-    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-width", 1);
-    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-width", 1);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-width", 1);
+    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
 
     // Create a tooltip div to show values
     const tooltip = d3.select("body").append("div")
@@ -224,7 +224,7 @@ async function visualizeData() {
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("contactintro.wav"),  // Replace with actual file paths
+        weather: new Audio(""),  // Replace with actual file paths
         search1: new Audio("contactdrums.wav"),
         search2: new Audio("mgmtkidsintro.wav"),
         search3: new Audio("stonedguitar.wav")
@@ -389,17 +389,26 @@ async function visualizeData() {
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
-    .text("Switch to Berries Data")
-    .on("click", () => update(searchData1, "search1"));
+        .text("Switch to Berries Data")
+        .on("click", () => update(searchData1, "search1"))
+        .style("background", "#ed872d")
+        .style("color", "white")
+        .style("font-size", "20px");
 
     d3.select("body").append("button")
         .text("Switch to Yoga Mats Data")
-        .on("click", () => update(searchData2, "search2"));
+        .on("click", () => update(searchData2, "search2"))
+        .style("background", "#ff69b4")
+        .style("color", "white")
+        .style("font-size", "20px");
 
     // Add a button to switch datasets
     d3.select("body").append("button")
         .text("Switch to Green tea Data")
-        .on("click", () => update(searchData3, "search3"));
+        .on("click", () => update(searchData3, "search3"))
+        .style("background", "#40e0d0")
+        .style("color", "black")
+        .style("font-size", "20px");
 
     return svg.node();
 }
