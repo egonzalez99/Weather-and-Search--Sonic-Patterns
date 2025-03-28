@@ -148,3 +148,43 @@ header nav ul li a {
   font-size: 16px;
   pointer-events: none;
 }
+
+@keyframes gridStart {
+    from {
+      opacity: 0;
+      transform: scale(0.3);
+      filter: hue-rotate(150deg);
+    }
+  
+    to {
+      opacity: 1;
+      transform: scale(1); /* changed from scale to transform for consistency */
+      filter: hue-rotate(0deg);
+    }
+  }
+  
+  .animated-grid {
+    margin-top: 45px;
+    margin-bottom: 720px;
+    height: 10vh;
+  
+    display: grid;
+    gap: 1rem;
+    padding: 10px;
+  
+    grid-template-areas: 
+      "a b"
+      "c d";
+  
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+  
+    animation: gridStart 2s ease-out;
+  }
+  
+  .animated-grid > div {
+    border: 1px solid black;
+    padding: 10px;
+    font-size: 30px;
+    text-align: center;
+  }

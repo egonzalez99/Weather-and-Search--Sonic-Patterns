@@ -22,44 +22,51 @@
         </nav>
     </header>
 
-    <div class="bodytext">
-        <hr>
- 
-        <h3> IN THIS EDITION:</h3>
- 
-         <p> This culmination project is for the Spring 2025 showcase. It features an interactive 
-             data visualization that combines weather data (temperature, rain, snow, and wind) with 
-             Google search term trends (results and patterns). The goal is to create an engaging, 
-             interactive experience.</p>
- 
-         <p> This demo is built using HTML, CSS, JavaScript, and Python, leveraging the D3.js framework 
-             for data visualization. It also integrates the Google Custom Search JSON API and Google 
-             Trends API for search data, along with NOAA’s weather data in JSON format.
-         </p>
- 
-         <hr>
- 
-         <h4>INSTRUCTIONS TO DATA SWITCH:</h4>
- 
-         <p> Below is the data visualization with buttons for you to press to surf actoss the different 
-             search terms that will seemlessly transition into another search term data from the button. 
-             While showing the axis adjusting. 
-         </p>
- 
-         <hr>
- 
-         <h4>INSTRUCTIONS TO PLAY SOUND:</h4>
- 
-         <p> Below is the data visualization where the sound will play while you're switching between the 
-             data terms. Meanwhile the termperature [blue line graph] will play from the start but can be reset
-             and play by the follwing:
-         
-         <p>Reset = "R" key.</p>
-         
-         <p>Play = "Space" key.</p>
-         
-         </p>     
-     </div>
+    <div class="animated-grid">
+        <div style="grid-area: a;">
+            <h3> IN THIS EDITION:</h3>
+
+            <p> This capstone project is designed for the Spring 2025 showcase. It presents an interactive
+                data visualization that merges weather data (temperature, rain, snow, and wind) with Google
+                search term trends (results and patterns). The goal is to deliver an engaging and interactive
+                experience for users.
+            </p>
+            <br>
+
+            <hr>
+
+            <br>
+            <p> This demo is developed using HTML, CSS, JavaScript, and Python, utilizing the D3.js 
+                framework for data visualization. It also incorporates the Google Custom Search JSON API 
+                and Google Trends API for search data, as well as NOAA's weather data in JSON format.
+            </p>
+        </div>
+
+        <div style="grid-area: b;">
+            <h4>INSTRUCTIONS TO INTERACT WITH DATA:</h4>
+
+            <p> Below is the data visualization with buttons for you to press to surf actoss the different 
+                search terms that will seemlessly transition into another search term data from the button. 
+                While showing the axis adjusting. 
+            </p>
+            <hr>
+            <p> Below is the data visualization where the sound will play while you're switching between the 
+                the data. If you want to interact with the search terms then please click on the buttons Below
+                with the search term data above the graph and it will play a sound:  Meanwhile the termperature 
+                [blue line graph] will play from the start but can be reset and play by the follwing: 
+            </p>
+            <hr>
+                <p>
+                    Interact with the Temperature:   
+                    <span style="margin-left: 1rem;"> Reset = "R" key.</span>
+                    <span style="margin-left: 2rem;">Play = "Space" key.</span>
+                </p>
+                <p>
+                    Interact with the data:   
+                    <span style="margin-left: 1rem;"> Play Sound = Click on buttons below.</span>
+                </p>
+        </div>
+        </div>
 
     <section>
         <script type="module" src="./newjerseydata/njvisualizer.js"></script>
