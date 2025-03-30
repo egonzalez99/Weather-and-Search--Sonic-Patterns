@@ -3,21 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Culmination Project</title>
-    <script src="audio.js" defer></script>
 </head>
 
 <body>
     <div class="bodytext"> 
-        <h1> THE TRI-STATE TRIBUNE </h1>
+        <h1> HOME </h1>
         <hr>
-        <h2> HEADLINES FROM THE EMPIRE STATE: WEATHER & SEARCH</h2> 
+        <h2> HEADLINES FROM THE HOME STATE: WEATHER & SEARCH</h2> 
     </div>
 
     <header class="header">
         <nav class="navbar">
+            <a href="newyork.html"> New York Page </a>
             <a href="newjersey.html"> New Jersey Page </a>
             <a href="connecticut.html"> Connecticut Page</a>
         </nav>
@@ -69,15 +68,5 @@
                 </p>
         </div>
         </div>
-
-    <!-- Data and Graph Section -->
-    <section>
-        <script type="module" src="./newyorkdata/nycvisualizer.js"></script>
-        <script type="module" src="searchterm.js"></script>
-        <div id="Output"></div>
-    </section>
-    <label for="volumeSlider">Volume:</label>
-    <input type="range" id="volumeSlider" min="-30" max="30" value="0" step="1">
-    <span id="volumeValue">0 dB</span>    
 </body>
 </html>

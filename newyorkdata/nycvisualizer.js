@@ -8,7 +8,6 @@ async function visualizeData() {
     const searchData1 = await d3.json("newyorkdata/pedialyteny.json");
     const searchData2 = await d3.json("newyorkdata/automotivebatteryny.json");
     const searchData3 = await d3.json("newyorkdata/lampsny.json");
-
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
@@ -111,17 +110,17 @@ async function visualizeData() {
     }
 
     // Function to show specific data
-    function showBerries() {
+    function showData1() {
         yAxisSearch1.style("display", "block");
         search1Path.style("display", "block");
     }
 
-    function showYogaMats() {
+    function showData2() {
         yAxisSearch2.style("display", "block");
         search2Path.style("display", "block");
     }
 
-    function showGreenTea() {
+    function showData3() {
         yAxisSearch3.style("display", "block");
         search3Path.style("display", "block");
     }
@@ -225,12 +224,12 @@ async function visualizeData() {
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("igorstartshort.wav"),  // Replace with actual file paths
-        search1: new Audio("igorpew.wav"),
-        search2: new Audio("thankyoudrums.wav"),
-        search3: new Audio("thankyouknock.wav")
+        weather: new Audio("audio/igorstartshort.wav"),  // Replace with actual file paths
+        search1: new Audio("audio/igorpew.wav"),
+        search2: new Audio("audio/thankyoudrums.wav"),
+        search3: new Audio("audio/thankyouknock.wav")
     };
-    
+        
     // Get the volume slider element
     const volumeSlider = document.getElementById("volumeSlider");
     const volumeValueDisplay = document.getElementById("volumeValue");
@@ -350,7 +349,7 @@ async function visualizeData() {
 
 
         } else if (dataType === "search1") {
-            showBerries();
+            showData1();
             ySearch1.domain([0, d3.max(data, d => d.RESULTS)]);
     
             // Transition for Y-axis (berries data)
@@ -361,7 +360,7 @@ async function visualizeData() {
             animatePath(search1Path, data, lineSearch1, ySearch1, "search1");
 
         } else if (dataType === "search2") {
-            showYogaMats();
+            showData2();
             ySearch2.domain([0, d3.max(data, d => d.RESULTS)]);
     
             // Transition for Y-axis (baby birth data)
@@ -372,7 +371,7 @@ async function visualizeData() {
             animatePath(search2Path, data, lineSearch2, ySearch2, "search2");
 
         } else if (dataType === "search3"){
-            showGreenTea();
+            showData3();
             ySearch3.domain([0, d3.max(data, d => d.RESULTS)]);
             
             // Transition for Y-axis (baby birth data)

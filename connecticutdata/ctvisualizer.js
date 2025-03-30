@@ -209,10 +209,10 @@ async function visualizeData() {
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("lowroar.wav"),  // Replace with actual file paths
-        search1: new Audio("allcaps.wav"),
-        search2: new Audio("chromadrop.wav"),
-        search3: new Audio("pinkwhiteintro.wav")
+        weather: new Audio("audio/lowroar.wav"),  // Replace with actual file paths
+        search1: new Audio("audio/allcaps.wav"),
+        search2: new Audio("audio/chromadrop.wav"),
+        search3: new Audio("audio/pinkwhiteintro.wav")
     };
 
     // Get the volume slider element

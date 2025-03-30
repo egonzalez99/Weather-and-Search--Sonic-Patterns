@@ -3,9 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>     <!-- D3.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/tone@14"></script>     <!-- Tone.js CDN -->
+    
+    <!-- D3.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    
+    <!-- Tone.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14"></script>
+
+    <!-- Corrected path to CSS -->
     <link rel="stylesheet" href="../css/style.css">
+
     <title>Culmination Project</title>
 </head>
 
@@ -13,13 +20,13 @@
     <div class="bodytext"> 
         <h1> THE TRI-STATE TRIBUNE </h1>
         <hr>
-        <h2> HEADLINES FROM THE GARDEN STATE: WEATHER & SEARCH</h2> 
+        <h2> HEADLINES FROM THE EMPIRE STATE: WEATHER & SEARCH</h2> 
     </div>
 
     <header class="header">
         <nav class="navbar">
             <a href="index.html"> HOME </a>
-            <a href="newyork.html"> New York Page </a>
+            <a href="newjersey.html"> New Jersey Page </a>
             <a href="connecticut.html"> Connecticut Page</a>
         </nav>
     </header>
@@ -47,15 +54,15 @@
         <div style="grid-area: b;">
             <h4>INSTRUCTIONS TO INTERACT WITH DATA:</h4>
 
-            <p> Below is the data visualization with buttons for you to press to surf actoss the different 
-                search terms that will seemlessly transition into another search term data from the button. 
+            <p> Below is the data visualization with buttons for you to press to surf across the different 
+                search terms that will seamlessly transition into another search term data from the button. 
                 While showing the axis adjusting. 
             </p>
             <hr>
             <p> Below is the data visualization where the sound will play while you're switching between the 
-                the data. If you want to interact with the search terms then please click on the buttons Below
-                with the search term data above the graph and it will play a sound:  Meanwhile the termperature 
-                [blue line graph] will play from the start but can be reset and play by the follwing: 
+                the data. If you want to interact with the search terms, then please click on the buttons below
+                with the search term data above the graph and it will play a sound: Meanwhile, the temperature 
+                [blue line graph] will play from the start but can be reset and play by the following: 
             </p>
             <hr>
                 <p>
@@ -68,17 +75,19 @@
                     <span style="margin-left: 1rem;"> Play Sound = Click on buttons below.</span>
                 </p>
         </div>
-        </div>
+    </div>
 
     <section>
-        <script type="module" src="./newjerseydata/njvisualizer.js"></script>
+        <!-- Corrected path to JS files -->
+        <script type="module" src="./newyorkdata/nycvisualizer.js"></script>
         <script type="module" src="./searchtermdata/searchterm.js"></script>
+
+        <!-- Output div where your data will be rendered -->
         <div id="Output"></div>
     </section>
 
     <label for="volumeSlider">Volume:</label>
     <input type="range" id="volumeSlider" min="-30" max="30" value="0" step="1">
-    <span id="volumeValue">0 dB</span>
-    
+    <span id="volumeValue">0 dB</span>  
 </body>
 </html>
