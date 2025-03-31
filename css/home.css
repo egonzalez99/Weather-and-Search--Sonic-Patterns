@@ -4,6 +4,7 @@ body {
     height: 100vh;
     width: 100vw;
     margin: 0rem;
+    color: white;
 }
 
 #image-container {
@@ -13,5 +14,15 @@ body {
     gap: 5vmin;
     top: 50%;
     left: 50%;
+    cursor: grab;
+    transition: transform 0.2s ease;
 }
 
+#image-container > .image {
+    width: 45vmin;
+    height: 66vmin;
+    object-fit: cover;
+    object-position: 100% center;  /* percentage use for homeimages.js percentage syntax to manipulate the css */
+    cursor: grabbing;
+    transition: transform 0.2s ease;
+  }
