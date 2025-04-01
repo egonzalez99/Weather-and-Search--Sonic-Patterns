@@ -6,6 +6,7 @@ body {
     margin: 0rem;
 }
 /* container that stores the images of the cities */
+
 #image-container {
     display: flex;
     position: absolute;
@@ -15,6 +16,9 @@ body {
     left: 50%;
     cursor: grab;
     transition: transform 0.2s ease;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
 }
 
 #image-container > .image {
@@ -96,11 +100,22 @@ body {
     content: '';
     position: absolute;
     top: 0;
-    left: -30px;
+    left: 220px;
     transform: skew(0deg, -3deg);
     text-align: center center;
-    padding: 60px; /* adjust top to text spacing */
+    padding: 250px; /* adjust top to text spacing */
     margin-bottom: 6px;
+}
+
+/* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: flex-start; /* Aligns items to the left */
+    align-items: center; /* Centers items vertically */
+    position: absolute; /* Absolute positioning */
+    top: 10px; /* Adjust the distance from the top of the screen */
+    left: 0; /* Move navbar to the left */
+    width: auto; /* Adjust width as needed */
 }
 
 /* Navbar styles */
@@ -110,7 +125,7 @@ body {
     color: black;
     font-weight: 500;
     text-decoration: none;
-    margin-right: 30px;
+    margin: 0 80px; /* Adds spacing between links */
 }
 
 /* Hover underline effect */
@@ -128,6 +143,7 @@ body {
 .navbar a:hover::before {
     width: 100%;
 }
+
 
 /* newsstand text */
 .newstitle {
@@ -178,4 +194,34 @@ body {
     background: white;
     transform: skew(0deg, 3deg);
     z-index: -1;
+}
+
+/* Style for New York (First Link) */
+.navbar a:nth-child(1) {
+    color: black; /* Example: Change text color */
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 200px;
+    margin-top: 285px;
+    margin-left: 10px;
+}
+
+/* Style for New Jersey (Second Link) */
+.navbar a:nth-child(2) {
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 170px;
+    margin-top: 260px;
+    margin-left: 300px;
+}
+
+/* Style for Connecticut (Third Link) */
+.navbar a:nth-child(3) {
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 170px;
+    margin-top: 260px;
+    margin-left: 230px;
 }
