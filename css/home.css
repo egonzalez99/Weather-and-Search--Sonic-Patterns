@@ -1,18 +1,17 @@
 body {
-    background-color: black;
+    background-color: white;
     overflow: hidden;
     height: 100vh;
     width: 100vw;
     margin: 0rem;
-    color: white;
 }
-
+/* container that stores the images of the cities */
 #image-container {
     display: flex;
     position: absolute;
     transform: translate(0%, -50%);
     gap: 5vmin;
-    top: 50%;
+    top: 55%;
     left: 50%;
     cursor: grab;
     transition: transform 0.2s ease;
@@ -25,4 +24,158 @@ body {
     object-position: 100% center;  /* percentage use for homeimages.js percentage syntax to manipulate the css */
     cursor: grabbing;
     transition: transform 0.2s ease;
-  }
+}
+
+/* news header styles */
+.newsheader {
+    position: relative;
+    text-align: center center;
+    padding: 12px;
+    margin-bottom: 6px;
+    height: 150px;
+    width: 100vw;
+    z-index: -1;
+}
+.newsheader:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background: black;
+    transform: skew(0deg, -3deg);
+    z-index: -1;
+}
+.newsheader:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50%;
+    background: black;
+    transform: skew(0deg, 3deg);
+    z-index: -1;
+}
+
+/* news body styles */
+.newsbody {
+    position: relative;
+    text-align: center center;
+    padding: 12px;
+    margin-bottom: 6px;
+    height: 850px;
+    width: 100vw;
+    z-index: -1;
+}
+.newsbody:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background: #A42008;
+    transform: skew(0deg, -3deg);
+    z-index: -1;
+}
+.newsbody:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50%;
+    background: #A2B0C9;
+    transform: skew(0deg, 3deg);
+    z-index: -1;
+}
+/* header styles */
+.header {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -30px;
+    transform: skew(0deg, -3deg);
+    text-align: center center;
+    padding: 60px; /* adjust top to text spacing */
+    margin-bottom: 6px;
+}
+
+/* Navbar styles */
+.navbar a {
+    position: relative;
+    font-size: 45px;
+    color: black;
+    font-weight: 500;
+    text-decoration: none;
+    margin-right: 30px;
+}
+
+/* Hover underline effect */
+.navbar a::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: black;
+    transition: width 0.3s ease;
+}
+
+.navbar a:hover::before {
+    width: 100%;
+}
+
+/* newsstand text */
+.newstitle {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -30px;
+    transform: skew(0deg, 3deg);
+    text-align: center center;
+    margin-bottom: 1px;
+    font-size: 150px;
+    color: #A42008;
+    font-weight: 0;
+    text-decoration: none;
+    margin-right: 30px;
+}
+
+
+/* inner header shape */
+.innernewsheader {
+    position: relative;
+    text-align: center center;
+    padding: 10px;
+    margin-bottom: 6px;
+    height: 150px;
+    width: 100vw;
+    z-index: -1;
+}
+
+.innernewsheader:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 90%;
+    width: 50%;
+    background: #A2B0C9;
+    transform: skew(0deg, -3deg);
+    z-index: -1;
+}
+.innernewsheader:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 90%;
+    width: 50%;
+    background: white;
+    transform: skew(0deg, 3deg);
+    z-index: -1;
+}
