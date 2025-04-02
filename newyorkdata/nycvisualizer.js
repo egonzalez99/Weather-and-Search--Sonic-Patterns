@@ -11,12 +11,13 @@ async function visualizeData() {
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
-        AWND: d.AWND,
-        SNOW: d.SNOW,
-        PRCP: d.PRCP,
+        AWND: d.AWND ?? 0,
+        SNOW: d.SNOW ?? 0,
+        PRCP: d.PRCP ?? 0,
         TAVG: d.TAVG,
         RESULTS: d.RESULTS
     }));
+    console.log(filterData);
 
     // Parse and process data: needed so the strings can be js objects and match the weather dates
     // Fix date format
@@ -125,21 +126,6 @@ async function visualizeData() {
         search3Path.style("display", "block");
     }
 
-    // Define a linear gradient
-    const gradient = svg.append("defs")
-    .append("linearGradient")
-    .attr("id", "gradientStroke")
-    .attr("x1", "0%")
-    .attr("y1", "0%")
-    .attr("x2", "100%")
-    .attr("y2", "0%")
-    .append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", "#36648b")
-    .append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", "#a9a9a9");  // Lighter color
-
     // Append paths for lines and Creates graph paths inside graphGroup
     const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
     const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
@@ -221,13 +207,11 @@ async function visualizeData() {
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
+    const synth = new Tone.Synth().toDestination();
 
     // Load MP3 files for different datasets
     const audioFiles = {
         weather: new Audio("audio/igorstartshort.wav"),  // Replace with actual file paths
-        search1: new Audio("audio/igorpew.wav"),
-        search2: new Audio("audio/thankyoudrums.wav"),
-        search3: new Audio("audio/thankyouknock.wav")
     };
         
     // Get the volume slider element
@@ -263,19 +247,19 @@ async function visualizeData() {
             audioList.push(audioFiles.weather);
         } 
         if (dataType === "search1") {
-            let search1Audio = audioFiles.search1;
+            let search1Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search1;
             search1Audio.volume = Math.min(1, value / 100); 
             search1Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search1);
         } 
         if (dataType === "search2") {
-            let search2Audio = audioFiles.search2;
+            let search2Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search2;
             search2Audio.volume = Math.min(1, value / 100); 
             search2Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search2);
         } 
         if (dataType === "search3") {
-            let search3Audio = audioFiles.search3;
+            let search3Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search3;
             search3Audio.volume = Math.min(1, value / 100); 
             search3Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search3);
@@ -320,6 +304,15 @@ async function visualizeData() {
         });
 
     }
+
+    function updateSynthVolume(event) {
+        const sliderValue = parseFloat(event.target.value);
+        synth.volume.value = sliderValue;
+        document.getElementById("synthVolumeValue").textContent = `${sliderValue} dB`;
+        console.log(`Synth volume set to: ${synth.volume.value} dB`);
+    }
+    document.getElementById("synthVolumeSlider").addEventListener("input", updateSynthVolume);
+
 
     // Function to update the graph with transitions
     function update(data, dataType) {

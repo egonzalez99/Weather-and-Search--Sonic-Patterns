@@ -14,7 +14,7 @@ async function visualizeData() {
         date: new Date(d.DATE),
         AWND: d.AWND,
         SNOW: d.SNOW || 0, //if no snow than default to zero
-        PRCP: d.PRCP,
+        PRCP: d.PRCP, 
         TAVG: d.TAVG !== "" ? d.TAVG : (d.TMAX + d.TMIN) / 2 //theres no tavg in json so we calculate
     }));
 
@@ -206,13 +206,12 @@ async function visualizeData() {
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
+    const synth = new Tone.Synth().toDestination();
+    synth.volume.value = 0; // starting volume at 0 dB
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio(""),  // Replace with actual file paths
-        search1: new Audio("audio/contactdrums.wav"),
-        search2: new Audio("audio/mgmtkidsintro.wav"),
-        search3: new Audio("audio/stonedguitar.wav")
+        weather: new Audio("audio/thankyoudrums.wav"),  // Replace with actual file paths
     };
     
     // Get the volume slider element
@@ -223,6 +222,7 @@ async function visualizeData() {
     volumeSlider.addEventListener("input", (event) => {
         // Get the current slider value
         const sliderValue = event.target.value;
+        synth.volume.value = volume; // Set the volume 
 
         // Convert the slider value (-30 dB to 30 dB) to a linear volume value (0 to 1)
         // 10 ^ (dB / 20) converts dB to a linear scale (0 to 1)
@@ -248,19 +248,17 @@ async function visualizeData() {
             audioList.push(audioFiles.weather);
         } 
         if (dataType === "search1") {
-            let search1Audio = audioFiles.search1;
-            search1Audio.volume = Math.min(1, value / 100); 
-            search1Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
-            audioList.push(audioFiles.search1);
+            synth.volume.value = Tone.gainToDb(Math.min(1, value / 100));
+            synth.triggerAttackRelease(100 + value * 10, "8n");
         } 
         if (dataType === "search2") {
-            let search2Audio = audioFiles.search2;
+            let search2Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search2;
             search2Audio.volume = Math.min(1, value / 100); 
             search2Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search2);
         } 
         if (dataType === "search3") {
-            let search3Audio = audioFiles.search3;
+            let search3Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search3;
             search3Audio.volume = Math.min(1, value / 100); 
             search3Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search3);

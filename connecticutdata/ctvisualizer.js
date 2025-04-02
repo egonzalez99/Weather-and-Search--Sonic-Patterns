@@ -206,13 +206,11 @@ async function visualizeData() {
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
+    const synth = new Tone.Synth().toDestination();
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("audio/lowroar.wav"),  // Replace with actual file paths
-        search1: new Audio("audio/allcaps.wav"),
-        search2: new Audio("audio/chromadrop.wav"),
-        search3: new Audio("audio/pinkwhiteintro.wav")
+        weather: new Audio("audio/thankyouknock.wav"),  // Replace with actual file paths
     };
 
     // Get the volume slider element
@@ -248,19 +246,19 @@ async function visualizeData() {
             audioList.push(audioFiles.weather);
         } 
         if (dataType === "search1") {
-            let search1Audio = audioFiles.search1;
+            let search1Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search1;
             search1Audio.volume = Math.min(1, value / 100); 
             search1Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search1);
         } 
         if (dataType === "search2") {
-            let search2Audio = audioFiles.search2;
+            let search2Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search2;
             search2Audio.volume = Math.min(1, value / 100); 
             search2Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search2);
         } 
         if (dataType === "search3") {
-            let search3Audio = audioFiles.search3;
+            let search3Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search3;
             search3Audio.volume = Math.min(1, value / 100); 
             search3Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
             audioList.push(audioFiles.search3);
