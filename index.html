@@ -9,11 +9,14 @@
 
 <body>
 
-    <div class="newsheader">
-        <div class="innernewsheader"></div>        
+    <div class="newsheader" class="innernewsheader">
+        <div class="innernewsheader"></div> 
     </div>
+    
+    <div class="newstitle1"> WEATHER & SEARCH :</div>
+    <div class="newstitle2"> DATA VISUALIZER</div>
 
-    <div class="newstitle"> NEWSSTAND</div>
+
 
     <div id="image-container" data-mouse-is-down="0">
         <img class="image" src="images/newyork.jpeg" draggable="false"/>
@@ -29,7 +32,25 @@
     </div>
     <script type="module" src="src/homeimages.js"></script>
 
-    <div class="newsbody"></div>
+    <div class="newsbody">
+        <div class="weather-card newyork">
+            <div class="weather-icon sun"></div>
+            <h1>26º</h1>
+            <p>New York</p>
+        </div>
+
+        <div class="weather-card newjersey">
+            <div class="weather-icon cloud"></div>
+            <h1>14º</h1>
+            <p>New Jersey</p>
+        </div>
+
+        <div class="weather-card connecticut">
+            <div class="weather-icon snowflake"></div>
+            <h1>20º</h1>
+            <p>Connecticut</p>
+        </div>
+    </div>
 
 </body>
 </html>
