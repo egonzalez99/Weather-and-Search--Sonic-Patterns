@@ -307,7 +307,7 @@ async function visualizeData() {
     function update(data, dataType) {
         hideDataSelected();  // Hide berries and baby birth data first
 
-        x.domain(d3.extent(data, d => d.DATE || d.date));
+        x.domain(d3.extent(filterData, d => d.date));
 
         // Interrupt any ongoing transitions for the axes before starting a new one
         yAxisWeatherGroup.interrupt().transition().duration(3000).call(d3.axisLeft(yWeather));

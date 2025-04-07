@@ -5,7 +5,7 @@ import * as Tone from "https://cdn.jsdelivr.net/npm/tone@14/+esm";
 async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("newyorkdata/nysweather.json");
-    const searchData1 = await d3.json("newyorkdata/pedialyteny.json");
+    const searchData1 = await d3.json("newyorkdata/suntan.json");
     const searchData2 = await d3.json("newyorkdata/automotivebatteryny.json");
     const searchData3 = await d3.json("newyorkdata/lampsny.json");
     // Parse and process weather data
@@ -17,6 +17,7 @@ async function visualizeData() {
         TAVG: d.TAVG,
         RESULTS: d.RESULTS
     }));
+    
     console.log(filterData);
 
     // Parse and process data: needed so the strings can be js objects and match the weather dates
@@ -318,8 +319,8 @@ async function visualizeData() {
     function update(data, dataType) {
         hideDataSelected();  // Hide berries and baby birth data first
 
-        x.domain(d3.extent(data, d => d.DATE || d.date));
-
+        x.domain(d3.extent(filterData, d => d.date));
+        
         // Interrupt any ongoing transitions for the axes before starting a new one
         yAxisWeatherGroup.interrupt().transition().duration(3000).call(d3.axisLeft(yWeather));
         yAxisSearch1.interrupt().transition().duration(3000).call(d3.axisRight(ySearch1));
@@ -344,13 +345,13 @@ async function visualizeData() {
         } else if (dataType === "search1") {
             showData1();
             ySearch1.domain([0, d3.max(data, d => d.RESULTS)]);
-    
+
             // Transition for Y-axis (berries data)
             yAxisSearch1.transition().duration(3000).call(d3.axisRight(ySearch1));
     
             // Transition for the berries line
-            search1Path.datum(data).transition().duration(3000).attr("d", lineSearch1);
-            animatePath(search1Path, data, lineSearch1, ySearch1, "search1");
+            search1Path.datum(searchData1).transition().duration(3000).attr("d", lineSearch1);
+            animatePath(search1Path, searchData1, lineSearch1, ySearch1, "search1");
 
         } else if (dataType === "search2") {
             showData2();
@@ -383,7 +384,7 @@ async function visualizeData() {
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
-        .text("Switch to Pedialyte Data")
+        .text("Switch to Sun Tan Data")
         .on("click", () => update(searchData1, "search1"))
         .style("background", "#ed872d")
         .style("color", "white")
