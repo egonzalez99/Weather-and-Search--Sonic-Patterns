@@ -207,13 +207,17 @@ async function visualizeData() {
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
     const synth = new Tone.Synth().toDestination();
-    synth.volume.value = 0; // starting volume at 0 dB
+    const reverb = new Tone.Reverb(2).toDestination(); // 2-second reverb
+    const delay = new Tone.FeedbackDelay(0.5, 0.5).toDestination(); // 0.5s delay
+    
+    synth.connect(reverb);
+    synth.connect(delay);
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("audio/thankyoudrums.wav"),  // Replace with actual file paths
+        weather: new Audio("audio/igorstartshort.wav"),  // Replace with actual file paths
     };
-    
+        
     // Get the volume slider element
     const volumeSlider = document.getElementById("volumeSlider");
     const volumeValueDisplay = document.getElementById("volumeValue");
@@ -222,7 +226,6 @@ async function visualizeData() {
     volumeSlider.addEventListener("input", (event) => {
         // Get the current slider value
         const sliderValue = event.target.value;
-        synth.volume.value = volume; // Set the volume 
 
         // Convert the slider value (-30 dB to 30 dB) to a linear volume value (0 to 1)
         // 10 ^ (dB / 20) converts dB to a linear scale (0 to 1)
@@ -248,8 +251,10 @@ async function visualizeData() {
             audioList.push(audioFiles.weather);
         } 
         if (dataType === "search1") {
-            synth.volume.value = Tone.gainToDb(Math.min(1, value / 100));
-            synth.triggerAttackRelease(100 + value * 10, "8n");
+            let search1Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search1;
+            search1Audio.volume = Math.min(1, value / 100); 
+            search1Audio.playbackRate = Math.max(0.5, Math.min(2, value / 50));
+            audioList.push(audioFiles.search1);
         } 
         if (dataType === "search2") {
             let search2Audio = synth.triggerAttackRelease(100 + value * 10, "8n").search2;
@@ -301,7 +306,17 @@ async function visualizeData() {
                 playSound(d.TAVG || d.RESULTS, dataType);
             }, (i / data.length) * 5000);
         });
+
     }
+
+    function updateSynthVolume(event) {
+        const sliderValue = parseFloat(event.target.value);
+        synth.volume.value = sliderValue;
+        document.getElementById("synthVolumeValue").textContent = `${sliderValue} dB`;
+        console.log(`Synth volume set to: ${synth.volume.value} dB`);
+    }
+    document.getElementById("synthVolumeSlider").addEventListener("input", updateSynthVolume);
+
 
     // Function to update the graph with transitions
     function update(data, dataType) {

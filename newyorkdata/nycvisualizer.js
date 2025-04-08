@@ -208,7 +208,18 @@ async function visualizeData() {
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
-    const synth = new Tone.Synth().toDestination();
+    const synth = new Tone.Synth({
+        oscillator: {
+          type: "sine", // "sine", "square", "triangle", "sawtooth"
+          modulationType: "square", // Add modulation to synth sound
+        },
+        envelope: {
+          attack: 0.1,
+          decay: 0.2,
+          sustain: 0.5,
+          release: 1,
+        },
+      }).toDestination();
 
     // Load MP3 files for different datasets
     const audioFiles = {

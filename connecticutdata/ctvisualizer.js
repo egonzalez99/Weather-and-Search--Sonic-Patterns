@@ -207,6 +207,8 @@ async function visualizeData() {
 
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
     const synth = new Tone.Synth().toDestination();
+    const distortion = new Tone.Distortion(0.8).toDestination();
+    synth.connect(distortion);
 
     // Load MP3 files for different datasets
     const audioFiles = {
