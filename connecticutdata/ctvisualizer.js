@@ -115,24 +115,60 @@ async function visualizeData() {
         search1Path.style("display", "block");
     }
 
-    function showYogaMats() {
+    function showData2() {
         yAxisSearch2.style("display", "block");
         search2Path.style("display", "block");
     }
 
-    function showGreenTea() {
+    function showData3() {
         yAxisSearch3.style("display", "block");
         search3Path.style("display", "block");
     }
 
+    const defs = svg.append("defs");
+
+    const gradient1 = defs.append("linearGradient").attr("id", "line-gradient1").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient1.append("stop").attr("offset", "0%").attr("stop-color", "blue"); // Start color
+    gradient1.append("stop").attr("offset", "100%").attr("stop-color", "red"); // End color
+
+    // Gradient for awndPath
+    const gradient2 = defs.append("linearGradient").attr("id", "line-gradient2").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient2.append("stop").attr("offset", "0%").attr("stop-color", "#00ab66"); // Start color
+    gradient2.append("stop").attr("offset", "100%").attr("stop-color", "#87CEEB"); // End color
+
+    // Gradient for prcpPath
+    const gradient3 = defs.append("linearGradient").attr("id", "line-gradient3").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient3.append("stop").attr("offset", "0%").attr("stop-color", "#ceff00"); // Start color
+    gradient3.append("stop").attr("offset", "100%").attr("stop-color", "red"); // End color
+
+    // Gradient for snowPath
+    const gradient4 = defs.append("linearGradient").attr("id", "line-gradient4").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient4.append("stop").attr("offset", "0%").attr("stop-color", "red"); // Start color
+    gradient4.append("stop").attr("offset", "100%").attr("stop-color", "#06E2BC"); // End color
+
+    // Gradient for search1Path
+    const gradient5 = defs.append("linearGradient").attr("id", "line-gradient5").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient5.append("stop").attr("offset", "25%").attr("stop-color", "#ed872d"); // Start color
+    gradient5.append("stop").attr("offset", "100%").attr("stop-color", "#2D93ED"); // End color
+
+    // Gradient for search2Path
+    const gradient6 = defs.append("linearGradient").attr("id", "line-gradient6").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient6.append("stop").attr("offset", "25%").attr("stop-color", "#ff69b4"); // Start color
+    gradient6.append("stop").attr("offset", "100%").attr("stop-color", "#69FFB4"); // End color
+
+    // Gradient for search3Path
+    const gradient7 = defs.append("linearGradient").attr("id", "line-gradient7").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
+    gradient7.append("stop").attr("offset", "25%").attr("stop-color", "#40e0d0"); // Start color
+    gradient7.append("stop").attr("offset", "100%").attr("stop-color", "#E30B5C"); // End color
+
     // Append paths for lines and Creates graph paths inside graphGroup
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "#ed872d").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "#ff69b4").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "#40e0d0").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient1)") .attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("x1", x(0)).attr("x2", x(yWeather)).attr("stroke-width", 1.8);
+    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient2)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient3)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient4)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient5)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient6)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient7)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
 
     // Create a tooltip div to show values
     const tooltip = d3.select("body").append("div")
@@ -344,7 +380,7 @@ async function visualizeData() {
             animatePath(search1Path, data, lineSearch1, ySearch1, "search1");
 
         } else if (dataType === "search2") {
-            showYogaMats();
+            showData2();
             ySearch2.domain([0, d3.max(data, d => d.RESULTS)]);
     
             // Transition for Y-axis (baby birth data)
@@ -355,7 +391,7 @@ async function visualizeData() {
             animatePath(search2Path, data, lineSearch2, ySearch2, "search2");
 
         } else if (dataType === "search3"){
-            showGreenTea();
+            showData3();
             ySearch3.domain([0, d3.max(data, d => d.RESULTS)]);
             
             // Transition for Y-axis (baby birth data)
