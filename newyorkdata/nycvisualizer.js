@@ -127,8 +127,25 @@ async function visualizeData() {
         search3Path.style("display", "block");
     }
 
+    const defs = svg.append("defs");
+
+    const gradient = defs.append("linearGradient")
+      .attr("id", "line-gradient1")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "100%") // horizontal gradient; use y2="100%" for vertical
+      .attr("y2", "0%");
+    
+    gradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "blue"); // Start color
+    
+    gradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "red"); // End color
+
     // Append paths for lines and Creates graph paths inside graphGroup
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "#36648b").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
+    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient1)") .attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("x1", x(0)).attr("x2", x(yWeather)).attr("stroke-width", 1.8);
     const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "#00ab66").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
     const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "#ceff00").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
     const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "#e2062c").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
