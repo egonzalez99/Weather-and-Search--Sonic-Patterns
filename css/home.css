@@ -50,7 +50,7 @@ body {
     left: 0;
     height: 100%;
     width: 50%;
-    background: #A2B0C9;
+    background: black;
     transform: skew(0deg, -3deg);
     z-index: -1;
 }
@@ -61,7 +61,7 @@ body {
     right: 0;
     height: 100%;
     width: 50%;
-    background: #A42008;
+    background: black;
     transform: skew(0deg, 3deg);
     z-index: -1;
 }
@@ -83,7 +83,7 @@ body {
     left: 0;
     height: 100%;
     width: 50%;
-    background: #A42008;
+    background: linear-gradient(to right, #534666, #CD7672);
     transform: skew(0deg, -3deg);
     z-index: -1;
 }
@@ -94,7 +94,7 @@ body {
     right: 0;
     height: 100%;
     width: 50%;
-    background: #A2B0C9;
+    background: linear-gradient(to right, #CD7672, #534666);
     transform: skew(0deg, 3deg);
     z-index: -1;
 }
@@ -203,7 +203,7 @@ body {
     left: 0;
     height: 90%;
     width: 50%;
-    background: #A42008;
+    background: linear-gradient(to right, #534666, #CD7672);
     transform: skew(0deg, -3deg);
     z-index: 3;
 }
@@ -214,7 +214,7 @@ body {
     right: 0;
     height: 90%;
     width: 50%;
-    background: #A2B0C9;
+    background: linear-gradient(to right, #CD7672, #534666);
     transform: skew(0deg, 3deg);
     z-index: 3;
 }
@@ -266,7 +266,7 @@ body {
     width: 270px;
     height: 230px;
     background-color: white;
-    box-shadow: 0px 0px 25px 1px black;
+    box-shadow: 0px 0px 25px 1px white;
     animation: temperatire-cities 2s ease-out forwards;
     /* weather text */
     h1 {
