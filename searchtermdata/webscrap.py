@@ -7,7 +7,7 @@ api_key = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA'
 cx = '41332f9237c50459d'
 
 # Search query
-query = 'yoga mats'  # Modify the search term if needed
+query = 'lamps'  # Modify the search term if needed
 
 # Function to fetch search trends for each month of the past year
 def fetch_search_trends():
@@ -44,7 +44,7 @@ def fetch_search_trends():
     with open('test.json', 'w') as json_file:
         json.dump(search_trends, json_file, indent=4)
 
-    print("Search trends saved to 'search_trends.json'.")
+    print("Search trends saved to 'lamps.json'.")
 
 # Call the function to fetch search trends
 fetch_search_trends()

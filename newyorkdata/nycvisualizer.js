@@ -8,6 +8,7 @@ async function visualizeData() {
     const searchData1 = await d3.json("newyorkdata/suntan.json");
     const searchData2 = await d3.json("newyorkdata/automotivebatteryny.json");
     const searchData3 = await d3.json("newyorkdata/lampsny.json");
+    const searches1 = await d3.json("test.json");
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
@@ -15,7 +16,8 @@ async function visualizeData() {
         SNOW: d.SNOW ?? 0,
         PRCP: d.PRCP ?? 0,
         TAVG: d.TAVG,
-        RESULTS: d.RESULTS
+        RESULTS: d.RESULTS,
+        SRESULTS: d.SRESULTS
     }));
     
     console.log(filterData);
@@ -46,6 +48,15 @@ async function visualizeData() {
             delete d.results;
         }
     });
+
+    searches1.forEach(d => {
+        d.DATE = parseDate(d.DATE);
+        if (d.sresults !== undefined) {
+            d.RESULTS = d.sresults;
+            delete d.sresults;
+        }
+    });
+    searches1.sort((a, b) => a.DATE - b.DATE); // sort it based on date
 
     // Set dimensions
     const width = window.innerWidth;
@@ -227,6 +238,7 @@ async function visualizeData() {
                     WIND: ${closestData.AWND ?? "N/A"}<br>
                     RAIN: ${closestData.PRCP ?? "N/A"}<br>
                     SNOW: ${closestData.SNOW ?? "N/A"}<br>
+                    SEARCH TERM RESULTS: ${closestData.SRESULTS ?? "N/A"}<br>
                 `);
         })
         .on("mouseout", function () {
@@ -239,7 +251,7 @@ async function visualizeData() {
     addHoverEffect(awndPath, filterData, yWeather, 'AWND');
     addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
     addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
-    addHoverEffect(search1Path, searchData1, ySearch1, 'RESULTS'); // Update for searchData [1,2,3]
+    addHoverEffect(search1Path, searches1, ySearch1, 'RESULTS'); // Update for searchData [1,2,3]
     addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 

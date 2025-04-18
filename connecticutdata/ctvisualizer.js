@@ -5,8 +5,8 @@ import * as Tone from "https://cdn.jsdelivr.net/npm/tone@14/+esm";
 async function visualizeData() {
     // Load both datasets
     const weatherData = await d3.json("connecticutdata/ctsweather.json");
-    const searchData1 = await d3.json("connecticutdata/automotivebatteryct.json");
-    const searchData2 = await d3.json("connecticutdata/yogamats_trends_ct..json");
+    const searchData1 = await d3.json("connecticutdata/pedialytect.json");
+    const searchData2 = await d3.json("connecticutdata/automotivebatteryct.json");
     const searchData3 = await d3.json("connecticutdata/lampsct.json");
 
     // Parse and process weather data
