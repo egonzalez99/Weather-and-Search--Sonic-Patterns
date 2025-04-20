@@ -3,8 +3,8 @@ import json
 from datetime import datetime, timedelta
 
 # Google Custom Search API Key and Custom Search Engine ID
-api_key = 'AIzaSyBVoUsBH-9kjhNFwNiyH9w0wICvU3sL_YA'
-cx = '41332f9237c50459d'
+api_key = 'api_key_here'
+cx = 'cx_here'
 
 # Search query
 query = 'lamps'  # Modify the search term if needed
