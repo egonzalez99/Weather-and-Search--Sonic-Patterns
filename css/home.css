@@ -418,3 +418,35 @@ body {
         transform: translateX(0px);
     }
 }
+
+/* weather and search css */
+/* Decorative background rectangles */
+.rect-red {   
+    position: absolute;
+    left: 450px;
+    top: 400px;
+    width: 300px;     /* or whatever size */
+    height: 50px;
+    rotate: -45deg;
+    background: red; /* or any color */
+}
+.rect-blue { 
+    position: absolute;
+    left: 630px;
+    top: 395px;
+    width: 300px;     /* or whatever size */
+    height: 50px;
+    rotate: 45deg;
+    background: blue; /* or any color */
+}
+.rect-yellow { fill: #fabb05; }
+
+/* Green directional arrow */
+.arrow-green {
+  fill: #34a853;
+  stroke: #34a853;
+  stroke-width: 10;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
