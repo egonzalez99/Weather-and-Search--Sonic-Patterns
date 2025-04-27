@@ -421,31 +421,132 @@ body {
 
 /* weather and search css */
 /* Decorative background rectangles */
+/* Initial styles */
+/* Initial styles */
 .rect-red {   
     position: absolute;
-    left: 450px;
+    left: 950px;
     top: 400px;
-    width: 300px;     /* or whatever size */
+    width: 300px;     
     height: 50px;
-    rotate: -45deg;
-    background: red; /* or any color */
+    transform: rotate(-45deg) rotateX(0deg);  /* Keep your original rotation */
+    animation: flipUpDownRed 2s infinite alternate;
+    background: red; 
 }
+
 .rect-blue { 
     position: absolute;
-    left: 630px;
+    left: 1132px;
     top: 395px;
-    width: 300px;     /* or whatever size */
+    width: 300px;     
     height: 50px;
-    rotate: 45deg;
-    background: blue; /* or any color */
+    transform: rotate(45deg) rotateX(0deg);  /* Keep your original rotation */
+    animation: flipUpDownBlue 2s infinite alternate;
+    background: blue; 
 }
-.rect-yellow { fill: #fabb05; }
+
+.rect-yellow { 
+    position: absolute;
+    left: 1310px;
+    top: 398px;
+    width: 300px;    
+    height: 50px;
+    transform: rotate(-45deg) rotateX(0deg);  /* Keep your original rotation */
+    animation: flipUpDownYellow 2s infinite alternate;
+    background: yellow; 
+}
 
 /* Green directional arrow */
 .arrow-green {
-  fill: #34a853;
-  stroke: #34a853;
-  stroke-width: 10;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+    position: absolute;
+    left: 1500px; 
+    top: 230px;
+    width: 0;
+    height: 0;
+    transform: rotate(45deg) rotateX(0deg);  /* Keep your original rotation */
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 100px solid #34a853;
+    animation: flipUpDownArrow 2s infinite alternate;
+}
+
+/* Keyframes for flipping (X-axis reflection effect) with magnifying glass effect */
+@keyframes flipUpDownRed {
+    0% {
+        transform: rotate(-45deg) rotateX(0deg);  /* No flip */
+        width: 300px;  
+        height: 50px;  
+        border-radius: 0%; /* Original rectangle shape */
+        box-shadow: none;  /* No shadow */
+    }
+    100% {
+        transform: rotate(-45deg) rotateX(180deg);  /* Flip over X-axis */
+        width: 300px;  
+        height: 100px;  
+        border-radius: 50%; /* Turn it into a circle */
+        box-shadow: 20px 20px 20px black;  /* Add shadow */
+        background: #4A3728;
+        opacity: 0;  /* Shape disappears */
+
+    }
+}
+
+@keyframes flipUpDownBlue {
+    0% {
+        transform: rotate(45deg) rotateX(0deg);  
+        width: 300px; 
+        height: 50px;  
+        border-radius: 0%; 
+        box-shadow: none; 
+    }
+    100% {
+        transform: rotate(45deg) rotateX(180deg);  
+        width: 50px;  
+        height: 50px;  
+        border-radius: 50%; 
+        box-shadow: 20px 20px 20px black;  
+        background: #4A3728;
+        opacity: 0;  /* Shape disappears */
+    }
+}
+
+@keyframes flipUpDownYellow {
+    0% {
+        transform: rotate(-45deg) rotateX(0deg);  
+        width: 300px; 
+        height: 50px;  
+        border-radius: 0%; 
+        box-shadow: none;  
+    }
+    100% {
+        transform: rotate(-45deg) rotateX(180deg);  
+        width: 500px; 
+        height: 100px;  
+        border-radius: 50%; 
+        box-shadow: 20px 20px 20px black;  
+        background: #4A3728;
+
+    }
+}
+
+@keyframes flipUpDownArrow {
+    0% {
+        transform: rotate(45deg) rotateX(0deg);  
+        width: 0;
+        height: 0;
+        border-left: 100px solid transparent;
+        border-right: 100px solid transparent;
+        border-bottom: 100px solid #34a853;
+        box-shadow: none;  
+    }
+    100% {
+        transform: rotate(45deg) rotateX(180deg); 
+        width: 150px;
+        height: 150px;
+        border-left: 75px solid transparent;
+        border-right: 75px solid transparent;
+        border-bottom: 150px solid white;  
+        box-shadow: 20px 50px 20px black;  
+        background: white;
+    }
 }
