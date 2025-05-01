@@ -255,6 +255,17 @@ async function visualizeData() {
     addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
+//----------------------TOOGLE ZOOM AND RESET LINES--------------------------------------------------
+
+    // Add toggle button
+    d3.select("body").append("button")
+    .attr("id", "toggleZoomBtn")
+    .text("Enable Zoom")
+    .style("font-size", "18px")
+    .style("margin", "10px");
+
+    let zoomActive = false;
+    
     const clip = svg.append("defs").append("clipPath")
     .attr("id", "clip")
     .append("rect")
@@ -267,6 +278,33 @@ async function visualizeData() {
     const brush = d3.brushX()
         .extent([[0, 0], [width, height]])
         .on("end", updateChart);
+    
+    // Append brush, but don't activate it unless toggled
+    const brushGroup = svg.append("g")
+    .attr("class", "brush")
+    .style("display", "none")  // hide by default
+    .call(brush);
+
+    // Toggle zoom on button click
+    d3.select("#toggleZoomBtn").on("click", () => {
+        zoomActive = !zoomActive;
+
+        // Show/hide brush
+        brushGroup.style("display", zoomActive ? "block" : "none");
+
+        // Update button text
+        d3.select("#toggleZoomBtn")
+            .text(zoomActive ? "Disable Zoom" : "Enable Zoom");
+
+        // Reset transforms if turning off zoom
+        if (!zoomActive) {
+            [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+                path.transition()
+                    .duration(1000)
+                    .attr("transform", `translate(0, 0) scale(1, 1)`)
+            );
+        }
+    });
 
     // Append the brush directly to SVG
     svg.append("g")
@@ -277,6 +315,7 @@ async function visualizeData() {
     function idled() { idleTimeout = null; }
     
     function updateChart(event) {
+        if (!zoomActive) return;
         const extent = event.selection;
     
         if (!extent) {
@@ -289,20 +328,22 @@ async function visualizeData() {
         const translateX = -x0;
     
         // Apply transform directly to lineTAVG
-        tavgPath
-            .transition()
-            .duration(1000)
-            .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`);
+        [ tavgPath, awndPath, prcpPath, snowPath ].forEach(path =>
+            path.transition()
+                .duration(1000)
+                .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`)
+        );
     
         // Remove brush overlay
         svg.select(".brush").call(brush.move, null);
     }
 
     svg.on("dblclick", function () {
-        tavgPath
-            .transition()
-            .duration(1000)
-            .attr("transform", `translate(0, 0) scale(1, 1)`);
+        [ tavgPath, awndPath, prcpPath, snowPath ].forEach(path =>
+            path.transition()
+                .duration(1000)
+                .attr("transform", `translate(0, 0) scale(1, 1)`)
+        );
     });
 
 //-----------------------------------------------------------------------------------------------------------
