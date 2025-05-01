@@ -12,8 +12,8 @@ async function visualizeData() {
     // Parse and process weather data.
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
-        AWND: Math.pow(d.AWND, 3) ?? 0, // exponenetial to exagerrate data. replicate with other data
-        SNOW: d.SNOW * 1, //apply median filter on this
+        AWND: Math.pow(d.AWND, 1.5) ?? 0, // exponenetial to exagerrate data. replicate with other data
+        SNOW: d.SNOW * 3, //apply median filter on this
         PRCP: d.PRCP * 1,
         TAVG: d.TAVG,
         RESULTS: d.RESULTS,
@@ -255,6 +255,58 @@ async function visualizeData() {
     addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
     addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
 
+    const clip = svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("x", 0)
+    .attr("y", 0);
+
+    // Define the brush
+    const brush = d3.brushX()
+        .extent([[0, 0], [width, height]])
+        .on("end", updateChart);
+
+    // Append the brush directly to SVG
+    svg.append("g")
+        .attr("class", "brush")
+        .call(brush);
+
+    let idleTimeout;
+    function idled() { idleTimeout = null; }
+    
+    function updateChart(event) {
+        const extent = event.selection;
+    
+        if (!extent) {
+            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350);
+            return;
+        }
+    
+        const [x0, x1] = extent;
+        const scaleX = width / (x1 - x0);
+        const translateX = -x0;
+    
+        // Apply transform directly to lineTAVG
+        tavgPath
+            .transition()
+            .duration(1000)
+            .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`);
+    
+        // Remove brush overlay
+        svg.select(".brush").call(brush.move, null);
+    }
+
+    svg.on("dblclick", function () {
+        tavgPath
+            .transition()
+            .duration(1000)
+            .attr("transform", `translate(0, 0) scale(1, 1)`);
+    });
+
+//-----------------------------------------------------------------------------------------------------------
+    //AUDIO SECTION
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
     const synth = new Tone.Synth({
         oscillator: {
