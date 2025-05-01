@@ -9,12 +9,12 @@ async function visualizeData() {
     const searchData2 = await d3.json("newyorkdata/automotivebatteryny.json");
     const searchData3 = await d3.json("newyorkdata/lampsny.json");
     const searches1 = await d3.json("test.json");
-    // Parse and process weather data
+    // Parse and process weather data.
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
-        AWND: d.AWND ?? 0,
-        SNOW: d.SNOW ?? 0,
-        PRCP: d.PRCP ?? 0,
+        AWND: Math.pow(d.AWND, 3) ?? 0, // exponenetial to exagerrate data. replicate with other data
+        SNOW: d.SNOW * 1, //apply median filter on this
+        PRCP: d.PRCP * 1,
         TAVG: d.TAVG,
         RESULTS: d.RESULTS,
         SRESULTS: d.SRESULTS
