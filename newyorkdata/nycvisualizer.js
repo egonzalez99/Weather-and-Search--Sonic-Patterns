@@ -175,24 +175,13 @@ async function visualizeData() {
     gradient7.append("stop").attr("offset", "100%").attr("stop-color", "#E30B5C"); // End color
 
     // Append paths for lines and Creates graph paths inside graphGroup
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient1)") .attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("x1", x(0)).attr("x2", x(yWeather)).attr("stroke-width", 1.8);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient2)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient3)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient4)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient5)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient6)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient7)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-  
-    // Create a tooltip div to show values
-    const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("visibility", "hidden")
-    .style("background-color", "black")
-    .style("color", "#fff")
-    .style("padding", "5px")
-    .style("border-radius", "5px")
-    .style("pointer-events", "none");
+    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient1)") .attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("x1", x(0)).attr("x2", x(yWeather)).attr("stroke-width", 1);
+    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient2)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient3)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient4)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient5)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient6)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient7)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
 
     //legend box for the line graphs
     const legend = svg.append("g").attr("transform", "translate(10, 10)");
@@ -215,58 +204,75 @@ async function visualizeData() {
 
     legend.append("text").attr("x", 750).attr("y", 16).attr("fill", "white").text(": SNOW");
 
-    // Add mouse events for each line
-    const addHoverEffect = (line, data, yScale, label) => {
-        line.style("pointer-events", "visibleStroke"); // receive mouse events
-    
-        line.on("mouseover", function (event) {
-            tooltip.style("visibility", "visible");
-        })
-        //fix position by 
-        .on("mousemove", function (event) {
-            const [xPos] = d3.pointer(event); //relative to container line graph 
-            const xValue = x.invert(xPos); //convert pixel data into date data
-            const bisectDate = d3.bisector(d => d.date || d.DATE).left; //show date depending on where the cursor lands in the sprted array
-            const index = bisectDate(data, xValue, 1);
-            const closestData = data[index];
-    
-            tooltip.style("left", `${event.pageX + 10}px`)
-                .style("top", `${event.pageY - 30}px`)
-                .html(`
-                    Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
-                    TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
-                    WIND: ${closestData.AWND ?? "N/A"}<br>
-                    RAIN: ${closestData.PRCP ?? "N/A"}<br>
-                    SNOW: ${closestData.SNOW ?? "N/A"}<br>
-                    SEARCH TERM RESULTS: ${closestData.SRESULTS ?? "N/A"}<br>
-                `);
-        })
-        .on("mouseout", function () {
-            tooltip.style("visibility", "hidden");
-        });
-    };
 
-    // Update the lines to add hover effect
-    addHoverEffect(tavgPath, filterData, yWeather, 'TAVG');
-    addHoverEffect(awndPath, filterData, yWeather, 'AWND');
-    addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
-    addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
-    addHoverEffect(search1Path, searches1, ySearch1, 'RESULTS'); // Update for searchData [1,2,3]
-    addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
-    addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
+//----------------------TOOGLE ZOOM AND RESET LINES/HOVER EFFECT--------------------------------------------------
 
-//----------------------TOOGLE ZOOM AND RESET LINES--------------------------------------------------
+// Global transform state
+let currentTransform = { scaleX: 1, translateX: 0 };
 
-    // Add toggle button
-    d3.select("body").append("button")
+// Tooltip setup (assumes you have this div in your HTML or create it here)
+const tooltip = d3.select("body").append("div")
+    .style("position", "absolute")
+    .style("background", "#fff")
+    .style("padding", "8px")
+    .style("border", "1px solid #ccc")
+    .style("border-radius", "4px")
+    .style("visibility", "hidden");
+
+// Hover effect function
+const addHoverEffect = (line, data, yScale, label) => {
+    line.style("pointer-events", "visibleStroke");
+
+    line.on("mouseover", function (event) {
+        tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function (event) {
+        const [xPos] = d3.pointer(event);
+
+        // Adjust for zoom transform
+        const transformedX = (xPos - currentTransform.translateX) / currentTransform.scaleX;
+        const xValue = x.invert(transformedX);
+
+        const bisectDate = d3.bisector(d => d.date || d.DATE).left;
+        const index = bisectDate(data, xValue, 1);
+        const closestData = data[index];
+
+        tooltip.style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 30}px`)
+            .html(`
+                Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
+                TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
+                WIND: ${closestData.AWND ?? "N/A"}<br>
+                RAIN: ${closestData.PRCP ?? "N/A"}<br>
+                SNOW: ${closestData.SNOW ?? "N/A"}<br>
+                SEARCH TERM RESULTS: ${closestData.SRESULTS ?? "N/A"}<br>
+            `);
+    })
+    .on("mouseout", function () {
+        tooltip.style("visibility", "hidden");
+    });
+};
+
+// Add hover effect to all paths
+addHoverEffect(tavgPath, filterData, yWeather, 'TAVG');
+addHoverEffect(awndPath, filterData, yWeather, 'AWND');
+addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
+addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
+addHoverEffect(search1Path, searches1, ySearch1, 'RESULTS');
+addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS');
+addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS');
+
+// Zoom toggle button
+d3.select("body").append("button")
     .attr("id", "toggleZoomBtn")
     .text("Enable Zoom")
     .style("font-size", "18px")
     .style("margin", "10px");
 
-    let zoomActive = false;
-    
-    const clip = svg.append("defs").append("clipPath")
+let zoomActive = false;
+
+// Clip path for brush area
+const clip = svg.append("defs").append("clipPath")
     .attr("id", "clip")
     .append("rect")
     .attr("width", width)
@@ -274,77 +280,74 @@ async function visualizeData() {
     .attr("x", 0)
     .attr("y", 0);
 
-    // Define the brush
-    const brush = d3.brushX()
-        .extent([[0, 0], [width, height]])
-        .on("end", updateChart);
-    
-    // Append brush, but don't activate it unless toggled
-    const brushGroup = svg.append("g")
+// Define brush behavior
+const brush = d3.brushX()
+    .extent([[0, 0], [width, height]])
+    .on("end", updateChart);
+
+// Brush group (hidden by default)
+const brushGroup = svg.append("g")
     .attr("class", "brush")
-    .style("display", "none")  // hide by default
+    .style("display", "none")
     .call(brush);
 
-    // Toggle zoom on button click
-    d3.select("#toggleZoomBtn").on("click", () => {
-        zoomActive = !zoomActive;
+// Toggle brush/zoom visibility
+d3.select("#toggleZoomBtn").on("click", () => {
+    zoomActive = !zoomActive;
 
-        // Show/hide brush
-        brushGroup.style("display", zoomActive ? "block" : "none");
+    brushGroup.style("display", zoomActive ? "block" : "none");
 
-        // Update button text
-        d3.select("#toggleZoomBtn")
-            .text(zoomActive ? "Disable Zoom" : "Enable Zoom");
+    d3.select("#toggleZoomBtn")
+        .text(zoomActive ? "Disable Zoom" : "Enable Zoom");
 
-        // Reset transforms if turning off zoom
-        if (!zoomActive) {
-            [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
-                path.transition()
-                    .duration(1000)
-                    .attr("transform", `translate(0, 0) scale(1, 1)`)
-            );
-        }
-    });
-
-    // Append the brush directly to SVG
-    svg.append("g")
-        .attr("class", "brush")
-        .call(brush);
-
-    let idleTimeout;
-    function idled() { idleTimeout = null; }
-    
-    function updateChart(event) {
-        if (!zoomActive) return;
-        const extent = event.selection;
-    
-        if (!extent) {
-            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350);
-            return;
-        }
-    
-        const [x0, x1] = extent;
-        const scaleX = width / (x1 - x0);
-        const translateX = -x0;
-    
-        // Apply transform directly to lineTAVG
-        [ tavgPath, awndPath, prcpPath, snowPath ].forEach(path =>
-            path.transition()
-                .duration(1000)
-                .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`)
-        );
-    
-        // Remove brush overlay
-        svg.select(".brush").call(brush.move, null);
-    }
-
-    svg.on("dblclick", function () {
-        [ tavgPath, awndPath, prcpPath, snowPath ].forEach(path =>
+    if (!zoomActive) {
+        [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
             path.transition()
                 .duration(1000)
                 .attr("transform", `translate(0, 0) scale(1, 1)`)
         );
-    });
+        currentTransform = { scaleX: 1, translateX: 0 };
+    }
+});
+
+let idleTimeout;
+function idled() { idleTimeout = null; }
+
+function updateChart(event) {
+    if (!zoomActive) return;
+
+    const extent = event.selection;
+
+    if (!extent) {
+        if (!idleTimeout) return idleTimeout = setTimeout(idled, 350);
+        return;
+    }
+
+    const [x0, x1] = extent;
+    const scaleX = width / (x1 - x0);
+    const translateX = -x0;
+
+    currentTransform = { scaleX, translateX };
+
+    [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+        path.transition()
+            .duration(1000)
+            .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`)
+    );
+
+    // Clear brush selection
+    svg.select(".brush").call(brush.move, null);
+}
+
+// Reset zoom on double-click
+svg.on("dblclick", function () {
+    [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+        path.transition()
+            .duration(1000)
+            .attr("transform", `translate(0, 0) scale(1, 1)`)
+    );
+    currentTransform = { scaleX: 1, translateX: 0 };
+});
 
 //-----------------------------------------------------------------------------------------------------------
     //AUDIO SECTION
