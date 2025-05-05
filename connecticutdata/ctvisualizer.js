@@ -8,18 +8,18 @@ async function visualizeData() {
     const searchData1 = await d3.json("connecticutdata/pedialytect.json");
     const searchData2 = await d3.json("connecticutdata/automotivebatteryct.json");
     const searchData3 = await d3.json("connecticutdata/lampsct.json");
+    const searches1 = await d3.json("test.json");
 
     // Parse and process weather data
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
         AWND: d.AWND,
         SNOW: d.SNOW || 0, //if no snow than default to zero
-        PRCP: d.PRCP,
+        PRCP: d.PRCP, 
         TAVG: d.TAVG !== "" ? d.TAVG : (d.TMAX + d.TMIN) / 2 //theres no tavg in json so we calculate
     }));
 
-    // Parse and process berries data
-    // Fix date format
+    // Parse and process weather data
     const parseDate = d3.timeParse("%Y-%m-%d");
     searchData1.forEach(d => {
         d.DATE = parseDate(d.DATE);
@@ -45,11 +45,20 @@ async function visualizeData() {
         }
     });
 
+    searches1.forEach(d => {
+        d.DATE = parseDate(d.DATE);
+        if (d.sresults !== undefined) {
+            d.RESULTS = d.sresults;
+            delete d.sresults;
+        }
+    });
+    searches1.sort((a, b) => a.DATE - b.DATE); // sort it based on date
+
     // Set dimensions
     const width = window.innerWidth;
     const height = 800;
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
-
+    
     // Define scales
     const x = d3.scaleTime().range([margin.left, width - margin.right]);
 
@@ -110,7 +119,7 @@ async function visualizeData() {
     }
 
     // Function to show specific data
-    function showBerries() {
+    function showData1() {
         yAxisSearch1.style("display", "block");
         search1Path.style("display", "block");
     }
@@ -139,11 +148,11 @@ async function visualizeData() {
     // Gradient for prcpPath
     const gradient3 = defs.append("linearGradient").attr("id", "line-gradient3").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
     gradient3.append("stop").attr("offset", "0%").attr("stop-color", "#ceff00"); // Start color
-    gradient3.append("stop").attr("offset", "100%").attr("stop-color", "red"); // End color
+    gradient3.append("stop").attr("offset", "100%").attr("stop-color", "#3100FF"); // End color
 
     // Gradient for snowPath
     const gradient4 = defs.append("linearGradient").attr("id", "line-gradient4").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
-    gradient4.append("stop").attr("offset", "0%").attr("stop-color", "red"); // Start color
+    gradient4.append("stop").attr("offset", "0%").attr("stop-color", "#e2062c"); // Start color
     gradient4.append("stop").attr("offset", "100%").attr("stop-color", "#06E2BC"); // End color
 
     // Gradient for search1Path
@@ -162,24 +171,13 @@ async function visualizeData() {
     gradient7.append("stop").attr("offset", "100%").attr("stop-color", "#E30B5C"); // End color
 
     // Append paths for lines and Creates graph paths inside graphGroup
-    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient1)") .attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("x1", x(0)).attr("x2", x(yWeather)).attr("stroke-width", 1.8);
-    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient2)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient3)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient4)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient5)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient6)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient7)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1.8);
-
-    // Create a tooltip div to show values
-    const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("visibility", "hidden")
-    .style("background-color", "black")
-    .style("color", "#fff")
-    .style("padding", "5px")
-    .style("border-radius", "5px")
-    .style("pointer-events", "none");
+    const tavgPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient1)") .attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("x1", x(0)).attr("x2", x(yWeather)).attr("stroke-width", 1);
+    const awndPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient2)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const prcpPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient3)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const snowPath = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient4)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const search1Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient5)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const search2Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient6)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
+    const search3Path = svg.append("path").attr("fill", "none").attr("stroke", "url(#line-gradient7)").attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("stroke-width", 1);
 
     //legend box for the line graphs
     const legend = svg.append("g").attr("transform", "translate(10, 10)");
@@ -202,55 +200,172 @@ async function visualizeData() {
 
     legend.append("text").attr("x", 750).attr("y", 16).attr("fill", "white").text(": SNOW");
 
-    // Add mouse events for each line
-    const addHoverEffect = (line, data, yScale, label) => {
-        line.style("pointer-events", "visibleStroke"); // receive mouse events
-    
-        line.on("mouseover", function (event) {
-            tooltip.style("visibility", "visible");
-        })
-        //fix position by 
-        .on("mousemove", function (event) {
-            const [xPos] = d3.pointer(event); //relative to container line graph 
-            const xValue = x.invert(xPos); //convert pixel data into date data
-            const bisectDate = d3.bisector(d => d.date || d.DATE).left; //show date depending on where the cursor lands in the sprted array
-            const index = bisectDate(data, xValue, 1);
-            const closestData = data[index];
-    
-            tooltip.style("left", `${event.pageX + 10}px`)
-                .style("top", `${event.pageY - 30}px`)
-                .html(`
-                    Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
-                    TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
-                    WIND: ${closestData.AWND ?? "N/A"}<br>
-                    RAIN: ${closestData.PRCP ?? "N/A"}<br>
-                    SNOW: ${closestData.SNOW ?? "N/A"}
-                `);
-        })
-        .on("mouseout", function () {
-            tooltip.style("visibility", "hidden");
-        });
-    };
 
-    // Update the lines to add hover effect
-    addHoverEffect(tavgPath, filterData, yWeather, 'TAVG');
-    addHoverEffect(awndPath, filterData, yWeather, 'AWND');
-    addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
-    addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
-    addHoverEffect(search1Path, searchData1, ySearch1, 'RESULTS'); // Update for searchData [1,2,3]
-    addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS'); 
-    addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS'); 
+//----------------------TOOGLE ZOOM AND RESET LINES/HOVER EFFECT--------------------------------------------------
 
+// Global transform state
+let currentTransform = { scaleX: 1, translateX: 0 };
+
+// Tooltip setup (assumes you have this div in your HTML or create it here)
+const tooltip = d3.select("body").append("div")
+    .style("position", "absolute")
+    .style("background", "#fff")
+    .style("padding", "8px")
+    .style("border", "1px solid #ccc")
+    .style("border-radius", "4px")
+    .style("visibility", "hidden");
+
+// Hover effect function
+const addHoverEffect = (line, data, yScale, label) => {
+    line.style("pointer-events", "visibleStroke");
+
+    line.on("mouseover", function (event) {
+        tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function (event) {
+        const [xPos] = d3.pointer(event);
+
+        // Adjust for zoom transform
+        const transformedX = (xPos - currentTransform.translateX) / currentTransform.scaleX;
+        const xValue = x.invert(transformedX);
+
+        const bisectDate = d3.bisector(d => d.date || d.DATE).left;
+        const index = bisectDate(data, xValue, 1);
+        const closestData = data[index];
+
+        tooltip.style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 30}px`)
+            .html(`
+                Date: ${d3.timeFormat("%Y-%m-%d")(closestData.date || closestData.DATE)}<br>
+                TEMPERATURE: ${closestData.TAVG ?? "N/A"}<br>
+                WIND: ${closestData.AWND ?? "N/A"}<br>
+                RAIN: ${closestData.PRCP ?? "N/A"}<br>
+                SNOW: ${closestData.SNOW ?? "N/A"}<br>
+                SEARCH TERM RESULTS: ${closestData.SRESULTS ?? "N/A"}<br>
+            `);
+    })
+    .on("mouseout", function () {
+        tooltip.style("visibility", "hidden");
+    });
+};
+
+// Add hover effect to all paths
+addHoverEffect(tavgPath, filterData, yWeather, 'TAVG');
+addHoverEffect(awndPath, filterData, yWeather, 'AWND');
+addHoverEffect(prcpPath, filterData, yWeather, 'PRCP');
+addHoverEffect(snowPath, filterData, yWeather, 'SNOW');
+addHoverEffect(search1Path, searches1, ySearch1, 'RESULTS');
+addHoverEffect(search2Path, searchData2, ySearch2, 'RESULTS');
+addHoverEffect(search3Path, searchData3, ySearch3, 'RESULTS');
+
+// Zoom toggle button
+d3.select("body").append("button")
+    .attr("id", "toggleZoomBtn")
+    .text("Enable Zoom")
+    .style("font-size", "18px")
+    .style("margin", "10px");
+
+let zoomActive = false;
+
+// Clip path for brush area
+const clip = svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("x", 0)
+    .attr("y", 0);
+
+// Define brush behavior
+const brush = d3.brushX()
+    .extent([[0, 0], [width, height]])
+    .on("end", updateChart);
+
+// Brush group (hidden by default)
+const brushGroup = svg.append("g")
+    .attr("class", "brush")
+    .style("display", "none")
+    .call(brush);
+
+// Toggle brush/zoom visibility
+d3.select("#toggleZoomBtn").on("click", () => {
+    zoomActive = !zoomActive;
+
+    brushGroup.style("display", zoomActive ? "block" : "none");
+
+    d3.select("#toggleZoomBtn")
+        .text(zoomActive ? "Disable Zoom" : "Enable Zoom");
+
+    if (!zoomActive) {
+        [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+            path.transition()
+                .duration(1000)
+                .attr("transform", `translate(0, 0) scale(1, 1)`)
+        );
+        currentTransform = { scaleX: 1, translateX: 0 };
+    }
+});
+
+let idleTimeout;
+function idled() { idleTimeout = null; }
+
+function updateChart(event) {
+    if (!zoomActive) return;
+
+    const extent = event.selection;
+
+    if (!extent) {
+        if (!idleTimeout) return idleTimeout = setTimeout(idled, 350);
+        return;
+    }
+
+    const [x0, x1] = extent;
+    const scaleX = width / (x1 - x0);
+    const translateX = -x0;
+
+    currentTransform = { scaleX, translateX };
+
+    [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+        path.transition()
+            .duration(1000)
+            .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`)
+    );
+
+    // Clear brush selection
+    svg.select(".brush").call(brush.move, null);
+}
+
+// Reset zoom on double-click
+svg.on("dblclick", function () {
+    [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+        path.transition()
+            .duration(1000)
+            .attr("transform", `translate(0, 0) scale(1, 1)`)
+    );
+    currentTransform = { scaleX: 1, translateX: 0 };
+});
+
+//-----------------------------------------------------------------------------------------------------------
+    //AUDIO SECTION
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
-    const synth = new Tone.Synth().toDestination();
-    const distortion = new Tone.Distortion(0.8).toDestination();
-    synth.connect(distortion);
+    const synth = new Tone.Synth({
+        oscillator: {
+          type: "sine", // "sine", "square", "triangle", "sawtooth"
+          modulationType: "square", // Add modulation to synth sound
+        },
+        envelope: {
+          attack: 0.1,
+          decay: 0.2,
+          sustain: 0.5,
+          release: 1,
+        },
+      }).toDestination();
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("audio/thankyouknock.wav"),  // Replace with actual file paths
+        weather: new Audio("audio/igorstartshort.wav"),  // Replace with actual file paths
     };
-
+        
     // Get the volume slider element
     const volumeSlider = document.getElementById("volumeSlider");
     const volumeValueDisplay = document.getElementById("volumeValue");
@@ -339,14 +454,24 @@ async function visualizeData() {
                 playSound(d.TAVG || d.RESULTS, dataType);
             }, (i / data.length) * 5000);
         });
+
     }
+
+    function updateSynthVolume(event) {
+        const sliderValue = parseFloat(event.target.value);
+        synth.volume.value = sliderValue;
+        document.getElementById("synthVolumeValue").textContent = `${sliderValue} dB`;
+        console.log(`Synth volume set to: ${synth.volume.value} dB`);
+    }
+    document.getElementById("synthVolumeSlider").addEventListener("input", updateSynthVolume);
+
 
     // Function to update the graph with transitions
     function update(data, dataType) {
         hideDataSelected();  // Hide berries and baby birth data first
 
         x.domain(d3.extent(filterData, d => d.date));
-
+        
         // Interrupt any ongoing transitions for the axes before starting a new one
         yAxisWeatherGroup.interrupt().transition().duration(3000).call(d3.axisLeft(yWeather));
         yAxisSearch1.interrupt().transition().duration(3000).call(d3.axisRight(ySearch1));
@@ -369,15 +494,15 @@ async function visualizeData() {
 
 
         } else if (dataType === "search1") {
-            showBerries();
+            showData1();
             ySearch1.domain([0, d3.max(data, d => d.RESULTS)]);
-    
+
             // Transition for Y-axis (berries data)
             yAxisSearch1.transition().duration(3000).call(d3.axisRight(ySearch1));
     
             // Transition for the berries line
-            search1Path.datum(data).transition().duration(3000).attr("d", lineSearch1);
-            animatePath(search1Path, data, lineSearch1, ySearch1, "search1");
+            search1Path.datum(searchData1).transition().duration(3000).attr("d", lineSearch1);
+            animatePath(search1Path, searchData1, lineSearch1, ySearch1, "search1");
 
         } else if (dataType === "search2") {
             showData2();
@@ -410,7 +535,7 @@ async function visualizeData() {
 
     // Add buttons to switch datasets
     d3.select("body").append("button")
-        .text("Switch to Pedialyte Data")
+        .text("Switch to Sun Tan Data")
         .on("click", () => update(searchData1, "search1"))
         .style("background", "#ed872d")
         .style("color", "white")
@@ -422,6 +547,7 @@ async function visualizeData() {
         .style("background", "#ff69b4")
         .style("color", "white")
         .style("font-size", "20px");
+
     // Add a button to switch datasets
     d3.select("body").append("button")
         .text("Switch to Lamps Data")
