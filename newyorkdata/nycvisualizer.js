@@ -12,8 +12,8 @@ async function visualizeData() {
     // Parse and process weather data.
     const filterData = weatherData.map(d => ({
         date: new Date(d.DATE),
-        AWND: Math.pow(d.AWND, 1.5) ?? 0, // exponenetial to exagerrate data. replicate with other data
-        SNOW: d.SNOW * 3, //apply median filter on this
+        AWND: Math.pow(d.AWND, 1) ?? 0, // exponenetial to exagerrate data. replicate with other data
+        SNOW: d.SNOW * 1, //apply median filter on this
         PRCP: d.PRCP * 1,
         TAVG: d.TAVG,
         RESULTS: d.RESULTS,
