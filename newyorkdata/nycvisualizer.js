@@ -20,7 +20,7 @@ async function visualizeData() {
         SRESULTS: d.SRESULTS
     }));
     
-    console.log(filterData);
+
 
     // Parse and process data: needed so the strings can be js objects and match the weather dates
     // Fix date format
