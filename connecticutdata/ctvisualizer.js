@@ -348,24 +348,15 @@ svg.on("dblclick", function () {
 //-----------------------------------------------------------------------------------------------------------
     //AUDIO SECTION
     const playHead = svg.append("circle").attr("r", 5).attr("fill", "red");
-    const synth = new Tone.Synth({
-        oscillator: {
-          type: "sine", // "sine", "square", "triangle", "sawtooth"
-          modulationType: "square", // Add modulation to synth sound
-        },
-        envelope: {
-          attack: 0.1,
-          decay: 0.2,
-          sustain: 0.5,
-          release: 1,
-        },
-      }).toDestination();
+    const synth = new Tone.Synth().toDestination();
+    const distortion = new Tone.Distortion(0.8).toDestination();
+    synth.connect(distortion);
 
     // Load MP3 files for different datasets
     const audioFiles = {
-        weather: new Audio("audio/igorstartshort.wav"),  // Replace with actual file paths
+        weather: new Audio("audio/thankyouknock.wav"),  // Replace with actual file paths
     };
-        
+
     // Get the volume slider element
     const volumeSlider = document.getElementById("volumeSlider");
     const volumeValueDisplay = document.getElementById("volumeValue");
