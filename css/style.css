@@ -22,7 +22,7 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url("../images/colors.jpg");
+    background-image: url('../images/colors.jpg');
     background-size: 200% auto; /* Expand width for movement */
     background-position: 0% 50%;
     background-repeat: no-repeat;
