@@ -158,11 +158,11 @@ body {
     transform: skew(0deg, -3deg);
     text-align: center center;
     margin-bottom: 1px;
-    font-size: 95px;
+    font-size: 75px;
     color: white;
     font-weight: 0;
     text-decoration: none;
-    margin-right: 0px;
+    margin-right: 10px;
     text-transform: uppercase;
     z-index: 1;
 }
@@ -171,11 +171,11 @@ body {
     content: '';
     position: absolute;
     top: 30px;
-    right: 45px;
+    right: 5px;
     transform: skew(0deg, 3deg);
     text-align: center center;
     margin-bottom: 1px;
-    font-size: 95px;
+    font-size: 75px;
     color: white;
     font-weight: 0;
     text-decoration: none;
@@ -225,8 +225,8 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     margin-right: 200px;
-    margin-top: 285px;
-    margin-left: 10px;
+    margin-top: 225px;
+    margin-left: -60px;
 }
 
 /* Style for New Jersey (Second Link) */
@@ -235,8 +235,8 @@ body {
     font-weight: bold;
     text-transform: uppercase;
     margin-right: 170px;
-    margin-top: 260px;
-    margin-left: 300px;
+    margin-top: 230px;
+    margin-left: 180px;
 }
 
 /* Style for Connecticut (Third Link) */
@@ -244,9 +244,9 @@ body {
     color: white;
     font-weight: bold;
     text-transform: uppercase;
-    margin-right: 170px;
-    margin-top: 260px;
-    margin-left: 230px;
+    margin-right: 100px;
+    margin-top: 180px;
+    margin-left: 50px;
 }
 
 /* weather display */
