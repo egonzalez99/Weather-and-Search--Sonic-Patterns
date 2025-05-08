@@ -9,18 +9,39 @@ async function visualizeData() {
     const searchData2 = await d3.json("newyorkdata/automotivebatteryny.json");
     const searchData3 = await d3.json("newyorkdata/lampsny.json");
     const searches1 = await d3.json("test.json");
+
+    function groupBy5DayMedian(data) {
+        const grouped = d3.groups(data, d => {
+            const year = d.date.getFullYear();
+            const jan1 = new Date(year, 0, 1);
+            const dayOfYear = Math.floor((d.date - jan1) / (1000 * 60 * 60 * 24)); //1 ms, 60s * 60s = 1hr, 24 hrs
+            const bin = Math.floor(dayOfYear / 3); // divide by how many days, 0 to num of days
+            return `${year}-B${bin}`;
+        });
+    
+        return grouped.map(([key, values]) => {
+            const dates = values.map(d => d.date);
+            return {
+                date: new Date(d3.median(dates)),
+                AWND: d3.median(values, d => d.AWND),
+                TAVG: d3.median(values, d => d.TAVG),
+                SNOW: d3.median(values, d => d.SNOW),
+                PRCP: d3.median(values, d => d.PRCP)
+            };
+        });
+    }
     // Parse and process weather data.
-    const filterData = weatherData.map(d => ({
+    const parsedWeather = weatherData.map(d => ({
         date: new Date(d.DATE),
-        AWND: Math.pow(d.AWND, 1) ?? 0, // exponenetial to exagerrate data. replicate with other data
-        SNOW: d.SNOW * 1, //apply median filter on this
-        PRCP: d.PRCP * 1,
+        AWND: Math.pow(d.AWND, 1.2) ?? 0, // exponenetial to exagerrate data. replicate with other data
+        SNOW: d.SNOW * 25, //apply median filter on this
+        PRCP: d.PRCP * 40,
         TAVG: d.TAVG,
         RESULTS: d.RESULTS,
         SRESULTS: d.SRESULTS
     }));
     
-
+    const filterData = groupBy5DayMedian(parsedWeather);
 
     // Parse and process data: needed so the strings can be js objects and match the weather dates
     // Fix date format
@@ -152,12 +173,12 @@ async function visualizeData() {
     // Gradient for prcpPath
     const gradient3 = defs.append("linearGradient").attr("id", "line-gradient3").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
     gradient3.append("stop").attr("offset", "0%").attr("stop-color", "#ceff00"); // Start color
-    gradient3.append("stop").attr("offset", "100%").attr("stop-color", "#3100FF"); // End color
+    gradient3.append("stop").attr("offset", "100%").attr("stop-color", "#ceff00"); // End color
 
     // Gradient for snowPath
     const gradient4 = defs.append("linearGradient").attr("id", "line-gradient4").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
-    gradient4.append("stop").attr("offset", "0%").attr("stop-color", "#e2062c"); // Start color
-    gradient4.append("stop").attr("offset", "100%").attr("stop-color", "#06E2BC"); // End color
+    gradient4.append("stop").attr("offset", "0%").attr("stop-color", "#E5E1FF"); // Start color
+    gradient4.append("stop").attr("offset", "100%").attr("stop-color", "#E5E1FF"); // End color
 
     // Gradient for search1Path
     const gradient5 = defs.append("linearGradient").attr("id", "line-gradient5").attr("x1", "0%").attr("y1", "100%").attr("x2", "0%") .attr("y2", "0%");
@@ -187,7 +208,7 @@ async function visualizeData() {
     const legend = svg.append("g").attr("transform", "translate(10, 10)");
     
     //temperature legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 0).attr("fill", "#36648b");
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 120).attr("y", 0).attr("fill", "red");
 
     legend.append("text").attr("x", 150).attr("y", 16).text(": TEMPERATURE").attr("fill", "white");
 
@@ -200,7 +221,7 @@ async function visualizeData() {
 
     legend.append("text").attr("x", 580).attr("y", 16).attr("fill", "white").text(": RAIN");
     //snow legend
-    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 0).attr("fill", "#e2062c")
+    legend.append("rect").attr("width", 20).attr("height", 20).attr("x", 720).attr("y", 0).attr("fill", "#E5E1FF")
 
     legend.append("text").attr("x", 750).attr("y", 16).attr("fill", "white").text(": SNOW");
 
