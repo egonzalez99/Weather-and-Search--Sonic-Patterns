@@ -322,7 +322,7 @@ d3.select("#toggleZoomBtn").on("click", () => {
         .text(zoomActive ? "Disable Zoom" : "Enable Zoom");
 
     if (!zoomActive) {
-        [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+        [tavgPath, awndPath, prcpPath, snowPath, search1Path, search2Path, search3Path].forEach(path =>
             path.transition()
                 .duration(1000)
                 .attr("transform", `translate(0, 0) scale(1, 1)`)
@@ -350,7 +350,7 @@ function updateChart(event) {
 
     currentTransform = { scaleX, translateX };
 
-    [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+    [tavgPath, awndPath, prcpPath, snowPath, search1Path, search2Path, search3Path].forEach(path =>
         path.transition()
             .duration(1000)
             .attr("transform", `translate(${translateX}, 0) scale(${scaleX}, 1)`)
@@ -362,7 +362,7 @@ function updateChart(event) {
 
 // Reset zoom on double-click
 svg.on("dblclick", function () {
-    [tavgPath, awndPath, prcpPath, snowPath].forEach(path =>
+    [tavgPath, awndPath, prcpPath, snowPath, search1Path, search2Path, search3Path].forEach(path =>
         path.transition()
             .duration(1000)
             .attr("transform", `translate(0, 0) scale(1, 1)`)
