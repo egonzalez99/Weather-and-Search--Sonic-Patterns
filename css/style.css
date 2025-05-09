@@ -12,6 +12,8 @@ body {
     margin: 0;
     overflow: auto;
     min-height: 100vh;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
 }
 
 /* Add blurred animated background */
@@ -52,6 +54,8 @@ section {
     display: block;
     padding: 20px;
     clear: both;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
 }
 
 /* Header styling */
@@ -66,13 +70,33 @@ h1, h2, h3, h4 {
 
 /* Paragraph styling */
 p {
-    text-align: justify;
+    text-align: center;
     font-size: 25px;
     width: 100%;
     padding: 0 10%;
     box-sizing: border-box;
     font-weight: bold;
     color: black;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
+}
+
+label {
+    text-align: center;
+    box-sizing: border-box;
+    font-weight: bold;
+    color: black;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
+}
+
+span {
+    text-align: center;
+    box-sizing: border-box;
+    font-weight: bold;
+    color: black;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;  /* Centers vertically */
 }
 
 hr {
@@ -165,8 +189,8 @@ header nav ul li a {
   }
   
   .animated-grid {
-    margin-top: 45px;
-    margin-bottom: 720px;
+    margin-top: 15px;
+    margin-bottom: 150px;
     height: 10vh;
   
     display: grid;
@@ -188,4 +212,16 @@ header nav ul li a {
     padding: 10px;
     font-size: 30px;
     text-align: center;
+  }
+
+  .centered-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center;     /* Center horizontally */
+    min-height: 0vh;       /* Fill full screen height */
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1; /* Ensure it appears above background */
   }

@@ -21,55 +21,35 @@
             <a href="index.html"> HOME </a>
         </nav>
     </header>
+    <hr>
 
     <div class="animated-grid">
         <div style="grid-area: a;">
-            <h3> IN THIS EDITION:</h3>
+            <h1>VOLUME INSTRUCTIONS:</h1>
 
-            <p> This capstone project, developed for the Spring 2025 showcase, features an interactive data visualization that combines weather data (temperature, rainfall, snowfall, and wind) with trends in Google search terms. The objective is to provide users with an engaging and insightful interactive experience.
-            </p>
-            <br>
+            <p> VOLUME CONTROLS [R KEY = RESET TEMPERATATURE SOUND | SPACE KEY = PLAY AFTER RESET]: </p>
+            <label for="volumeSlider">VOLUME:</label>
+            <input type="range" id="volumeSlider" min="-30" max="30" value="0" step="1">
+            <span id="volumeValue">0 dB FOR TEMPERATATURE VOLUME &nbsp; &nbsp; &nbsp; </span>
 
-            <hr>
-
-            <br>
-            <p> This demo is built using HTML, CSS, JavaScript, and Python, with data visualization powered by the D3.js framework. It integrates search data via the Google Custom Search JSON API and Google Trends API, and utilizes weather data provided in JSON format by NOAA.
-            </p>
+            <label for="volumeSlider">VOLUME:</label>
+            <input id="synthVolumeSlider" type="range" min="-30" max="30" step="1" value="0">
+            <span id="synthVolumeValue">0 dB FOR SEARCH TERMS DATA</span>
         </div>
 
         <div style="grid-area: b;">
-            <h4>INSTRUCTIONS TO INTERACT WITH DATA:</h4>
+            <h4>BUTTON INSTRUCTIONS:</h4>
+            
+            <p> BUTTONS CONTROLS [ZOOM = CLICK & DRAG ON GRAPH | DOUBLE CLICK TO RESET ZOOM EFFECT]: </p>
+        </div>
 
-            <hr>
-            <p> Below is an interactive data visualization with buttons to explore different search terms. Clicking a button transitions the graph to new data, adjusts the axes, and plays a sound. The temperature is shown as a blue line graph that plays automatically from the start and can be reset using the controls.
-            </p>
-            <hr>
-                <p>
-                    Interact with the Temperature:   
-                    <span style="margin-left: 1rem;"> RESET TEMPERATATURE SOUND = "R" key.</span>
-                    <span style="margin-left: 2rem;">PLAY AFTER RESET = "Space" key.</span>
-                </p>
-                <p>
-                    Interact with the data:   
-                    <span style="margin-left: 1rem;"> PLAY SOUND = Click on buttons below.</span>
-                    <span style="margin-left: 1rem;"> ZOOM = Click % Drag.</span>
-                    <span style="margin-left: 1rem;"> RESET ZOOM = Double Click.</span>
-                </p>
-        </div>
-        </div>
+    </div>
 
     <section>
         <script type="module" src="./newjerseydata/njvisualizer.js"></script>
         <script type="module" src="./searchtermdata/searchterm.js"></script>
         <div id="Output"></div>
     </section>
-
-    <label for="volumeSlider">Volume:</label>
-    <input type="range" id="volumeSlider" min="-30" max="30" value="0" step="1">
-    <span id="volumeValue">0 dB</span>
-
-    <input id="synthVolumeSlider" type="range" min="-30" max="30" step="1" value="0">
-    <span id="synthVolumeValue">0 dB FOR SEARCH DATA</span>
     
 </body>
 </html>
