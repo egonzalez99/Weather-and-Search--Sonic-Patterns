@@ -10,15 +10,34 @@ async function visualizeData() {
     const searchData3 = await d3.json("newyorkdata/lampsny.json");
     const searches1 = await d3.json("test.json");
 
-    function groupBy5DayMedian(data) {
+    //text and input for grouping data in line graph (value increases or decreases compression look)
+    d3.select("body")
+    .append("label")
+    .text("GROUP BY X NUMBER OF DAYS: ")
+    .style("color", "black")
+    .style("font-size", "22px")
+    .style("margin", "10px");
+
+    const dayInput = d3.select("body")
+    .append("input")
+    .attr("type", "number")
+    .attr("min", 1)
+    .attr("max", 365)
+    .attr("value", 5)  // num of days is 5. default num
+    .style("width", "60px")
+    .style("height", "30px")
+    .style("margin", "5px");
+
+    // Grouping function 
+    function groupByCustomDayMedian(data, intervalDays) {
         const grouped = d3.groups(data, d => {
             const year = d.date.getFullYear();
             const jan1 = new Date(year, 0, 1);
             const dayOfYear = Math.floor((d.date - jan1) / (1000 * 60 * 60 * 24)); //1 ms, 60s * 60s = 1hr, 24 hrs
-            const bin = Math.floor(dayOfYear / 3); // divide by how many days, 0 to num of days
+            const bin = Math.floor(dayOfYear / intervalDays); // divide by how many days, 0 to num of days
             return `${year}-B${bin}`;
         });
-    
+        // apply the median filter to each weather data values 
         return grouped.map(([key, values]) => {
             const dates = values.map(d => d.date);
             return {
@@ -30,18 +49,27 @@ async function visualizeData() {
             };
         });
     }
-    // Parse and process weather data.
+
+    // Parse weather data
     const parsedWeather = weatherData.map(d => ({
         date: new Date(d.DATE),
-        AWND: Math.pow(d.AWND, 1.2) ?? 0, // exponenetial to exagerrate data. replicate with other data
-        SNOW: d.SNOW * 25, //apply median filter on this
+        AWND: Math.pow(d.AWND, 1.2) ?? 0,
+        SNOW: d.SNOW * 25,
         PRCP: d.PRCP * 40,
         TAVG: d.TAVG,
         RESULTS: d.RESULTS,
         SRESULTS: d.SRESULTS
     }));
-    
-    const filterData = groupBy5DayMedian(parsedWeather);
+
+    // Default grouping and render number
+    let filterData = groupByCustomDayMedian(parsedWeather, 5);
+
+    // When the user changes the input
+    dayInput.on("input", () => {
+        const intervalDays = +dayInput.property("value");
+        filterData = groupByCustomDayMedian(parsedWeather, intervalDays);
+        update(filterData, "weather");
+    });
 
     // Parse and process data: needed so the strings can be js objects and match the weather dates
     // Fix date format
