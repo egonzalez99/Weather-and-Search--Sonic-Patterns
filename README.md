@@ -1,12 +1,12 @@
-Sure! Here's a polished and professional version of your `README.md` that’s clean, informative, and welcoming for users or collaborators:
+# 🌤️ Weather and Search Term Correlation
 
 ---
-
-# 🌤️ Weather and Search Term Correlation
 
 **Weather and Search Term Correlation** is an interactive data visualization project that explores potential relationships between weather patterns and popular search terms.
 
 Leveraging **D3.js** for dynamic visualizations and **data sonification** to bring the data to life with sound, this project offers an engaging, multimedia experience. While not a formal data science analysis, the emphasis is on creative exploration and playful interactivity.
+
+---
 
 ## 🎯 Features
 
@@ -15,13 +15,34 @@ Leveraging **D3.js** for dynamic visualizations and **data sonification** to bri
 * 🌍 Combines weather data with real-world search trends
 * 🎨 Focused on aesthetics, fun, and exploration
 
+---
+
+## 🛠️ Technologies Used
+D3.js – for building interactive and animated visualizations
+
+* JavaScript / HTML / CSS – Front-End web technologies
+
+* Python – Back-End web technologies. Gathering Search JSON file(s).
+
+* Tone.js – Implement real-time data sonification
+
+* Weather APIs (NOAA) – Fetching weather data
+
+* Search Trend APIs (Google Trends API, Google Search JSON) – for search term trends
+
+---
+
 ## 🚀 Getting Started
 
-Coming soon — setup instructions or a live demo link.
+## *Website Linked Here:* https://egonzalez99.github.io/Weather-and-Search--Sonic-Patterns/
+
+---
 
 ## 📂 Project Goals
 
 This is not a rigorous analytical project, but rather an artistic and interactive way to think about how external factors like weather might align with human behavior and curiosity. Perfect for exploring data in a non-traditional, entertaining format.
+
+---
 
 ## 📄 License
 
@@ -29,12 +50,9 @@ This project is licensed under the [MIT License](./LICENSE).
 
 ---
 
-Let me know if you'd like to add sections for:
+# 👥 Contributors / Contact
+* [Edward Gonzalez] – Developer, Designer, and Data
 
-* Installation/setup
-* Technologies used
-* Contributors
-* Screenshots or demo link
-* Contact or feedback info
+* GitHub: @egonzalez99
 
-And I can update it accordingly!
+* Email: bryangonzalez040@gmail.com
