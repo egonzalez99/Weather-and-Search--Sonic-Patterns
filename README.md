@@ -51,8 +51,6 @@ This project is licensed under the [MIT License](./LICENSE).
 ---
 
 # 👥 Contributors / Contact
-* [Edward Gonzalez] – Developer, Designer, and Data
+* **Edward Gonzalez** – Developer, Designer & Data | [GitHub Page: @egonzalez99](https://github.com/egonzalez99)
 
-* GitHub: @egonzalez99
-
-* Email: bryangonzalez040@gmail.com
+* 📧 Email: [bryangonzalez040@gmail.com](mailto:bryangonzalez040@gmail.com)
